@@ -62,13 +62,13 @@ for (@warn) {
     print "# $_";
 }
 
-print "not " unless join("", @warn) eq <<'EOT'; print "ok 1\n";
-Warning: something's wrong at t/warn.t line 31.
-Premature end of base64 data at t/warn.t line 33.
-Premature padding of base64 data at t/warn.t line 34.
-Warning: something's wrong at t/warn.t line 35.
-Premature end of base64 data at t/warn.t line 38.
-Premature padding of base64 data at t/warn.t line 42.
-Warning: something's wrong at t/warn.t line 44.
-Warning: something's wrong at t/warn.t line 53.
+print "not " unless join("", @warn) eq <<"EOT"; print "ok 1\n";
+Warning: something's wrong at $0 line 31.
+Premature end of base64 data at $0 line 33.
+Premature padding of base64 data at $0 line 34.
+Warning: something's wrong at $0 line 35.
+Premature end of base64 data at $0 line 38.
+Premature padding of base64 data at $0 line 42.
+Warning: something's wrong at $0 line 44.
+Warning: something's wrong at $0 line 53.
 EOT
