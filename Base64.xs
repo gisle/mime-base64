@@ -253,8 +253,9 @@ encode_qp(sv,...)
 	STRLEN sv_len;
 	STRLEN linelen;
 	char *beg;
-	char *p;
 	char *end;
+	char *p;
+	char *p_beg;
 	STRLEN p_len;
 
 	CODE:
@@ -269,15 +270,16 @@ encode_qp(sv,...)
 	    eol_len = 1;
 	}
 
-	p = SvPV(sv, sv_len);
-	end = p + sv_len;
+	beg = SvPV(sv, sv_len);
+	end = beg + sv_len;
 
 	RETVAL = newSV(sv_len + 1);
 	sv_setpv(RETVAL, "");
 	linelen = 0;
 
+	p = beg;
 	while (1) {
-	    beg = p;
+	    p_beg = p;
 
 	    /* skip past as much plain text as possible */
 	    while (p < end && qp_isplain(*p)) {
@@ -285,18 +287,18 @@ encode_qp(sv,...)
 	    }
 	    if (*p == '\n' || p == end) {
 		/* whitespace at end of line must be encoded */
-		while (p > beg && (*(p - 1) == '\t' || *(p - 1) == ' '))
+		while (p > p_beg && (*(p - 1) == '\t' || *(p - 1) == ' '))
 		    p--;
 	    }
 
-	    p_len = p - beg;
+	    p_len = p - p_beg;
 	    if (p_len) {
 	        /* output plain text (with line breaks) */
 	        if (eol_len) {
 		    while (p_len + linelen > 75) {
 			STRLEN len = 75 - linelen;
-			sv_catpvn(RETVAL, beg, len);
-			beg += len;
+			sv_catpvn(RETVAL, p_beg, len);
+			p_beg += len;
 			p_len -= len;
 			if (p_len > 1) {
 			    sv_catpvn(RETVAL, "=", 1);
@@ -306,7 +308,7 @@ encode_qp(sv,...)
 		    }
                 }
 		if (p_len) {
-	            sv_catpvn(RETVAL, beg, p_len);
+	            sv_catpvn(RETVAL, p_beg, p_len);
 	            linelen = p_len;
 		}
 	    }
@@ -330,6 +332,12 @@ encode_qp(sv,...)
 	    else {
 		assert(p == end);
 	        break;
+	    }
+
+	    /* optimize reallocs a bit */
+	    if (SvLEN(RETVAL) > 80 && SvLEN(RETVAL) - SvCUR(RETVAL) < 3) {
+		STRLEN expected_len = (SvCUR(RETVAL) * sv_len) / (p - beg);
+     		SvGROW(RETVAL, expected_len);
 	    }
         }
 
