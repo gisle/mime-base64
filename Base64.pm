@@ -27,7 +27,9 @@ The following functions are provided:
 
 =over 4
 
-=item encode_base64($str, [$eol])
+=item encode_base64($str)
+
+=item encode_base64($str, $eol);
 
 Encode data by calling the encode_base64() function.  The first
 argument is the string to encode.  The second argument is the line

@@ -31,12 +31,11 @@ The following functions are provided:
 
 =item encode_qp($str)
 
-This function will return an encoded version of the string given as
-argument.
+=item encode_qp($str, $eol)
 
-Note that encode_qp() does not change newlines C<"\n"> to the CRLF
-sequence even though this might be considered the right thing to do
-(RFC 2045 (Q-P Rule #4)).
+This function will return an encoded version of the string given as
+argument.  The second argument is the line ending sequence to use (it
+is optional and defaults to C<"\n">).
 
 =item decode_qp($str);
 
@@ -55,7 +54,7 @@ call them as:
 
 =head1 COPYRIGHT
 
-Copyright 1995-1997 Gisle Aas.
+Copyright 1995-1997,2002 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -76,7 +75,7 @@ use Carp qw(croak);
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-sub encode_qp ($)
+sub encode_qp ($;$)
 {
     my $res = shift;
     if ($] >= 5.006) {
@@ -86,6 +85,9 @@ sub encode_qp ($)
 	    croak("The Quoted-Printable encoding is only defined for bytes");
 	}
     }
+
+    my $eol = shift;
+    $eol = "\n" unless defined($eol) || length($eol);
 
     # Do not mention ranges such as $res =~ s/([^ \t\n!-<>-~])/sprintf("=%02X", ord($1))/eg;
     # since that will not even compile on an EBCDIC machine (where ord('!') > ord('<')).
@@ -123,7 +125,7 @@ sub encode_qp ($)
     # rule #5 (lines must be shorter than 76 chars, but we are not allowed
     # to break =XX escapes.  This makes things complicated :-( )
     my $brokenlines = "";
-    $brokenlines .= "$1=\n"
+    $brokenlines .= "$1=$eol"
 	while $res =~ s/(.*?^[^\n]{73} (?:
 		 [^=\n]{2} (?! [^=\n]{0,1} $) # 75 not followed by .?\n
 		|[^=\n]    (?! [^=\n]{0,2} $) # 74 not followed by .?.?\n
