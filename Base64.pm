@@ -157,8 +157,6 @@ if ($@) {
 # The XS implementation runs about 20 times faster, but the Perl
 # code might be more portable, so it is still here.
 
-use integer;
-
 sub old_encode_base64 ($;$)
 {
     if ($] >= 5.006) {
@@ -170,6 +168,8 @@ sub old_encode_base64 ($;$)
 	    Carp::croak("The Base64 encoding is only defined for bytes");
 	}
     }
+
+    use integer;
 
     my $eol = $_[1];
     $eol = "\n" unless defined $eol;
@@ -194,6 +194,7 @@ sub old_encode_base64 ($;$)
 sub old_decode_base64 ($)
 {
     local($^W) = 0; # unpack("u",...) gives bogus warning in 5.00[123]
+    use integer;
 
     my $str = shift;
     $str =~ tr|A-Za-z0-9+=/||cd;            # remove non-base64 chars
