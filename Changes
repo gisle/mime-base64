@@ -1,3 +1,16 @@
+2003-01-01   Gisle Aas <gisle@ActiveState.com>
+
+   Release 2.14
+
+   MIME::QuotedPrint now also implemented as XS function which
+   should make it faster.  The encode_qp() function now takes
+   an $eol argument in the same was as encode_base64() does.
+
+   Change in behaviour: the decode_qp() function now turns \r\n
+   terminated lines into \n terminated lines.
+
+
+
 2002-02-27   Gisle Aas <gisle@ActiveState.com>
 
    Release 2.13
