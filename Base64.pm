@@ -28,6 +28,14 @@ encode_base64() is the line ending sequence to use. It defaults to
 C<"\n">.  Use C<''> if you do not want the encoded string broken into
 lines.
 
+Instead of importing these routines into your namespace you might also
+call the as:
+
+  require MIME::Base64;
+  $encoded = MIME::Base64::encode('Aladdin:open sesame');
+  $decoded = MIME::Base64::decode($encoded);
+
+
 =head1 COPYRIGHT
 
 Copyright (c) 1995 Gisle Aas. All rights reserved.
@@ -91,5 +99,13 @@ sub decode_base64
     }
     $res;
 }
+
+# Set up aliases so that these functions also can be called as
+#
+# MIME::Base64::encode();
+# MIME::Base64::decode();
+
+*encode = \&encode_base64;
+*decode = \&decode_base64;
 
 1;

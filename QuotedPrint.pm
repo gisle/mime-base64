@@ -73,4 +73,12 @@ sub decode_qp
     $res;
 }
 
+# Set up aliases so that these functions also can be called as
+#
+# MIME::QuotedPrint::encode();
+# MIME::QuotedPrint::decode();
+
+*encode = \&encode_qp;
+*decode = \&decode_qp;
+
 1;
