@@ -1,6 +1,6 @@
 /* $Id$
 
-Copyright 1997-1998 Gisle Aas
+Copyright 1997-1999,2001 Gisle Aas
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -89,6 +89,9 @@ encode_base64(sv,...)
 	int chunk;
 
 	CODE:
+#ifdef sv_utf8_downgrade
+	sv_utf8_downgrade(sv, FALSE);
+#endif
 	str = SvPV(sv, rlen); /* SvPV(sv, len) gives warning for signed len */
 	len = (SSize_t)rlen;
 
