@@ -336,4 +336,62 @@ encode_qp(sv,...)
 	OUTPUT:
 	RETVAL
 
+SV*
+decode_qp(sv)
+	SV* sv
+	PROTOTYPE: $
+
+        PREINIT:
+	STRLEN len;
+	char *str = (unsigned char*)SvPVbyte(sv, len);
+	char const* end = str + len;
+	char *r;
+	char *whitespace = 0;
+
+        CODE:
+	RETVAL = newSV(len ? len : 1);
+        SvPOK_on(RETVAL);
+        r = SvPVX(RETVAL);
+	while (str < end) {
+	    if (*str == ' ' || *str == '\t') {
+		if (!whitespace)
+		    whitespace = str;
+		str++;
+	    }
+	    else if (*str == '\r' && (str + 1) < end && str[1] == '\n') {
+		str++;
+	    }
+	    else if (*str == '\n') {
+		whitespace = 0;
+		*r++ = *str++;
+	    }
+	    else {
+		if (whitespace) {
+		    while (whitespace < str) {
+			*r++ = *whitespace++;
+		    }
+		    whitespace = 0;
+                }
+            	if (*str == '=' && (str + 2) < end && isxdigit(str[1]) && isxdigit(str[2])) {
+		    *r++ = (char)strtol(str + 1, 0, 16);
+		    str += 3;
+	        }
+		else if (*str == '=' && (str + 1) < end && str[1] == '\n') {
+		    str += 2;
+		}
+		else if (*str == '=' && (str + 2) < end && str[1] == '\r' && str[2] == '\n') {
+		    str += 3;
+		}
+	    	else {
+	            *r++ = *str++;
+                }
+	    }
+	}
+	*r = '\0';
+	SvCUR_set(RETVAL, r - SvPVX(RETVAL));
+
+        OUTPUT:
+	RETVAL
+
+
 MODULE = MIME::Base64		PACKAGE = MIME::Base64

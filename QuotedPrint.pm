@@ -78,6 +78,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 use MIME::Base64;  # try to load XS version of encode_qp
 unless (defined &encode_qp) {
     *encode_qp = \&old_encode_qp;
+    *decode_qp = \&old_decode_qp;
 }
 
 sub old_encode_qp ($;$)
@@ -141,7 +142,7 @@ sub old_encode_qp ($;$)
 }
 
 
-sub decode_qp ($)
+sub old_decode_qp ($)
 {
     my $res = shift;
     $res =~ s/\r\n/\n/g;            # normalize newlines
