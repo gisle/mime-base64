@@ -151,7 +151,6 @@ decode_base64(sv)
 	register unsigned char *str = SvPV(sv, len);
 	unsigned char const* end = str + len;
 	char *r;
-	int i;
 	unsigned char c[4];
 
 	CODE:
@@ -164,12 +163,11 @@ decode_base64(sv)
         r = SvPVX(RETVAL);
 
 	while (str < end) {
-	    i = 0;
+	    int i = 0;
             do {
-		unsigned char uc = index_64[*str];
+		unsigned char uc = index_64[*str++];
 		if (uc != INVALID)
 		    c[i++] = uc;
-		str++;
 
 		if (str == end) {
 		    if (i < 4) {
