@@ -189,6 +189,7 @@ sub old_decode_base64 ($)
     }
     $str =~ s/=+$//;                        # remove padding
     $str =~ tr|A-Za-z0-9+/| -_|;            # convert to uuencoded format
+    return "" unless length $str;
 
     ## I guess this could be written as
     #return unpack("u", join('', map( chr(32 + length($_)*3/4) . $_,
