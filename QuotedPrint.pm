@@ -99,7 +99,7 @@ require Exporter;
 
 use Carp qw(croak);
 
-$VERSION = "2.20";
+$VERSION = "2.21";
 
 use MIME::Base64;  # try to load XS version of encode_qp
 unless (defined &encode_qp) {
