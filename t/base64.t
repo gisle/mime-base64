@@ -2,12 +2,13 @@ use MIME::Base64;
 
 print "1..273\n";
 
+print "Testing MIME::Base64-", $MIME::Base64::VERSION, "\n";
+
 $testno = 1;
 
-&encodeTest;
-&decodeTest;
+encodeTest();
+decodeTest();
 
-print "MIME::Base64 ", $MIME::Base64::VERSION, " tested ok\n";
 
 sub encodeTest
 {
@@ -307,6 +308,16 @@ sub encodeTest
             print "not ";
 	}
 
+	# Try the old C versions too
+	if ($encoded ne MIME::Base64::old_encode_base64($plain, '')) {
+	    print "old_encode_base64 give different result.\n";
+	    print "not ";
+        }
+	if ($plain ne MIME::Base64::old_decode_base64($encoded)) {
+	    print "old_decode_base64 give different result.\n";
+	    print "not ";
+        }
+		
 	print "ok $testno\n";
 	$testno++;
     }
