@@ -25,18 +25,36 @@ arbitrary sequences of octets in a form that need not be humanly
 readable. A 65-character subset ([A-Za-z0-9+/=]) of US-ASCII is used,
 enabling 6 bits to be represented per printable character.
 
-RFC 1521 says that the encoded bytes must be represented in lines of
-no more than 76 characters each.  The second argument to
-encode_base64() is the line ending sequence to use. It defaults to
-C<"\n">.  Use an empty string as second argument if you do not want
-the encoded string broken into lines.
+The following functions are provided:
+
+=over 4
+
+=item encode_base64($str, [$eol])
+
+Encode data by calling the encode_base64() function.  The first
+argument is the string to encode.  The second argument is the line
+ending sequence to use (it is optional and defaults to C<"\n">).  The
+returned encoded string is broken into lines of no more than 76
+characters each and it will end with $eol unless it is empty.  Pass an
+empty string as second argument if you do not want the encoded string
+broken into lines.
+
+=item decode_base64($str)
+
+Decode a base64 string by calling the decode_base64() function.  This
+function takes a single argument which is the string to decode and
+returns the decoded data.  Any character not part of the legal base64
+chars is ignored.  The decode_base64() function might croak if the
+sequence to decode ends prematurely.
+
+=back
 
 If you prefer not to import these routines into your namespace you can
 call them as:
 
-  use MIME::Base64 ();
-  $encoded = MIME::Base64::encode('Aladdin:open sesame');
-  $decoded = MIME::Base64::decode($encoded);
+    use MIME::Base64 ();
+    $encoded = MIME::Base64::encode($decoded);
+    $decoded = MIME::Base64::decode($encoded);
 
 
 =head1 COPYRIGHT
@@ -46,29 +64,25 @@ Copyright 1995-1997 Gisle Aas.
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
-=head1 AUTHOR
+Distantly based on LWP::Base64 written by Martijn Koster
+<m.koster@nexor.co.uk> and Joerg Reichelt <j.reichelt@nexor.co.uk> and
+code posted to comp.lang.perl <3pd2lp$6gf@wsinti07.win.tue.nl> by Hans
+Mulder <hansm@wsinti07.win.tue.nl>
 
-Gisle Aas <aas@sn.no>
-
-Based on LWP::Base64 written by Martijn Koster <m.koster@nexor.co.uk>
-and Joerg Reichelt <j.reichelt@nexor.co.uk> and code posted to
-comp.lang.perl <3pd2lp$6gf@wsinti07.win.tue.nl> by Hans Mulder
-<hansm@wsinti07.win.tue.nl>
-
-XS implementation use code from metamail.
+The XS implementation use code from metamail.  Copyright 1991 Bell
+Communications Research, Inc. (Bellcore)
 
 =cut
 
 use strict;
 use vars qw(@ISA @EXPORT $VERSION $OLD_CODE);
 
-require 5.002;
 require Exporter;
 require DynaLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = '2.00';
 
 eval { bootstrap MIME::Base64 $VERSION; };
 if ($@) {
@@ -81,8 +95,8 @@ if ($@) {
 }
 
 # Historically this module has been implemented as pure perl code.
-# The XS implementation runs about 25 times faster, but the perl
-# code might be more portable.
+# The XS implementation runs about 20 times faster, but the perl
+# code might be more portable, so it is still supported.
 
 use Carp ();
 use integer;
