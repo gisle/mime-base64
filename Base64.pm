@@ -41,8 +41,15 @@ broken into lines.
 
 Decode a base64 string by calling the decode_base64() function.  This
 function takes a single argument which is the string to decode and
-returns the decoded data.  Any character not part of the legal Base64
-character set is ignored.
+returns the decoded data.
+
+Any character not part of the 65-character base64 subset set is
+silently ignored.  Characters occuring after a '=' padding character
+are never decoded.
+
+If the length of the string to decode (after ignoring
+non-base64 chars) is not a multiple of 4 or padding occurs too ealy,
+then a warning is generated if perl is running under C<-w>.
 
 =back
 
@@ -52,6 +59,27 @@ call them as:
     use MIME::Base64 ();
     $encoded = MIME::Base64::encode($decoded);
     $decoded = MIME::Base64::decode($encoded);
+
+=head1 DIAGNOSTICS
+
+The following warnings might be generated if perl is invoked with the
+C<-w> switch:
+
+=over 4
+
+=item Premature end of base64 data
+
+The number of characters to decode is not a multiple of 4.  Legal
+base64 data should be padded with one or two "=" characters to make
+its length a multiple of 4.  The decoded result will anyway be as if
+the padding was there.
+
+=item Premature padding of base64 data
+
+The '=' padding character occurs as the first or second character
+in a base64 quartet.
+
+=back
 
 =head1 EXAMPLES
 
