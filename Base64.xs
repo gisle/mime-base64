@@ -35,6 +35,11 @@ extern "C" {
 }
 #endif
 
+#include "patchlevel.h"
+#if PATCHLEVEL < 5 && SUBVERSION < 5
+   #define PL_dowarn dowarn
+#endif
+
 #define MAX_LINE  76 /* size of encoded lines */
 
 static char basis_64[] =
@@ -175,7 +180,7 @@ decode_base64(sv)
 
 		if (str == end) {
 		    if (i < 4) {
-			if (dowarn) warn("Premature end of base64 data");
+			if (PL_dowarn) warn("Premature end of base64 data");
 			if (i < 2) goto thats_it;
 			if (i == 2) c[2] = EQ;
 			c[3] = EQ;
@@ -185,7 +190,7 @@ decode_base64(sv)
             } while (i < 4);
 	    
 	    if (c[0] == EQ || c[1] == EQ) {
-		if (dowarn) warn("Premature padding of base64 data");
+		if (PL_dowarn) warn("Premature padding of base64 data");
 		break;
             }
 	    /* printf("c0=%d,c1=%d,c2=%d,c3=%d\n", c[0],c[1],c[2],c[3]);/**/
