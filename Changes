@@ -1,3 +1,12 @@
+2003-05-13   Gisle Aas <gisle@ActiveState.com>
+
+   Release 2.19
+
+   decode_qp() did eat up all trailing whitespace in the string decoded.
+   Only whitespace in front of "\n" should go.
+
+
+
 2003-03-09   Gisle Aas <gisle@ActiveState.com>
 
    Release 2.18
