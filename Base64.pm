@@ -141,7 +141,7 @@ require DynaLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
-$VERSION = '2.21';
+$VERSION = '2.22';
 
 eval { bootstrap MIME::Base64 $VERSION; };
 if ($@) {
