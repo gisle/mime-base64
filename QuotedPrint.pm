@@ -20,20 +20,33 @@ decode_qp - Decode quoted-printable string
 
 This module provides functions to encode and decode strings into the
 Quoted-Printable encoding specified in RFC 1521 - I<MIME (Multipurpose
-Internet Mail Extensions)>.
+Internet Mail Extensions)>.  The Quoted-Printable encoding is intended
+to represent data that largely consists of bytes that correspond to
+printable characters in the ASCII character set.  Non-printable
+characters (as defined by americans) are represented by a triplet
+consisting of the character "=" followed by two hexadecimal digits.
 
-Note that these routines does not change C<"\n"> to CRLF.
+Note that the encode_qp() routine does not change newlines C<"\n"> to
+the CRLF sequence even though this might be considered the right thing
+to do (RFC 1521 (Q-P Rule #4)).
+
+If you prefer not to import these routines into your namespace you can
+call them as:
+
+  require MIME::QuotedPrint;
+  $encoded = MIME::QuotedPrint::encode($decoded);
+  $decoded = MIME::QuotedPrint::decode($encoded);
 
 =head1 COPYRIGHT
 
-Copyright (c) 1995 Gisle Aas. All rights reserved.
+Copyright (c) 1995, 1996 Gisle Aas. All rights reserved.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-Gisle Aas <aas@oslonett.no>
+Gisle Aas <aas@a.sn.no>
 
 =cut
 
@@ -54,7 +67,7 @@ sub encode_qp
       )/egm;                        # rule #3 (encode whitespace at eol)
 
     # rule #5 (lines must be shorter than 76 chars, but we are not allowed
-    # to break =XX escapes.  This makes things complicated.)
+    # to break =XX escapes.  This makes things complicated :-( )
     my $brokenlines = "";
     $brokenlines .= "$1=\n" while $res =~ s/^(.{74}([^=]{2})?)//;
     # unnessesary to make a break at the last char
