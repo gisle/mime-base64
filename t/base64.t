@@ -1,6 +1,6 @@
 use MIME::Base64;
 
-print "1..280\n";
+print "1..281\n";
 
 print "Testing MIME::Base64-", $MIME::Base64::VERSION, "\n";
 
@@ -15,6 +15,7 @@ sub encodeTest
     print "encode test\n";
 
     my @encode_tests = (
+        [''    => ''],
 	['a'   => 'YQ=='],
 	['aa'  => 'YWE='],
 	['aaa' => 'YWFh'],
