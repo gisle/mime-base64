@@ -5,9 +5,7 @@ package MIME::Base64;
 
 =head1 NAME
 
-encode_base64 - Encode string using base64 encoding
-
-decode_base64 - Decode base64 string
+MIME::Base64 - Encoding and decoding of base64 strings
 
 =head1 SYNOPSIS
 
@@ -55,6 +53,25 @@ call them as:
     $encoded = MIME::Base64::encode($decoded);
     $decoded = MIME::Base64::decode($encoded);
 
+=head1 EXAMPLES
+
+If you want to encode a large file, you should encode it in chunks
+that are a multiple of 57 bytes.  This ensures that the base64 lines
+line up and that you do not end up with padding in the middle. 57
+bytes of data fills one complete base64 line (76 == 57*4/3):
+
+   use MIME::Base64 qw(encode_base64);
+
+   open(FILE, "/var/log/wtmp") or die "$!";
+   while (read(FILE, $buf, 60*57)) {
+       print encode_base64($buf);
+   }
+
+or if you know you have enough memory
+
+   use MIME::Base64 qw(encode_base64);
+   local($/) = undef;  # slurp
+   print encode_base64(<STDIN>);
 
 =head1 COPYRIGHT
 
@@ -81,7 +98,7 @@ require DynaLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
-$VERSION = '2.03';
+$VERSION = '2.04';
 
 eval { bootstrap MIME::Base64 $VERSION; };
 if ($@) {

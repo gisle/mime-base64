@@ -5,9 +5,7 @@ package MIME::QuotedPrint;
 
 =head1 NAME
 
-encode_qp - Encode string using quoted-printable encoding
-
-decode_qp - Decode quoted-printable string
+MIME::QuotedPrint - Encoding and decoding of quoted-printable strings
 
 =head1 SYNOPSIS
 
@@ -27,9 +25,26 @@ characters (as defined by english americans) are represented by a
 triplet consisting of the character "=" followed by two hexadecimal
 digits.
 
-Note that the encode_qp() routine does not change newlines C<"\n"> to
-the CRLF sequence even though this might be considered the right thing
-to do (RFC 1521 (Q-P Rule #4)).
+The following functions are provided:
+
+=over 4
+
+=item encode_qp($str)
+
+This function will return an encoded version of the string given as
+argument.
+
+Note that encode_qp() does not change newlines C<"\n"> to the CRLF
+sequence even though this might be considered the right thing to do
+(RFC 2045 (Q-P Rule #4)).
+
+=item decode_qp($str);
+
+This function will return the plain text version of the string given
+as argument.
+
+=back
+
 
 If you prefer not to import these routines into your namespace you can
 call them as:
