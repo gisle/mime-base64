@@ -52,8 +52,15 @@ sub qp_encode
       join('', map { sprintf("=%02X", ord($_)) }
 	           split('', $1)
       )/egm;                        # rule #3 (encode whitespace at eol)
-    $res =~ s/(.{76})(?=.)/$1=\n/g; # rule #5 (lines shorter than 76 chars)
-    $res;
+
+    # rule #5 (lines must be shorter than 76 chars, but we are not allowed
+    # to break =XX escapes.  This makes things complicated.)
+    my $brokenlines = "";
+    $brokenlines .= "$1=\n" while $res =~ s/^(.{74}([^=]{2})?)//;
+    # unnessesary to make a break at the last char
+    $brokenlines =~ s/=\n$// unless length $res; 
+
+    "$brokenlines$res";
 }
 
 
