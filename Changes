@@ -1,3 +1,14 @@
+1998-12-18   Gisle Aas <aas@sn.no>
+
+   Release 2.10
+
+   A tweak that should make compilation with some old perl5.00[23]
+   perls better.
+
+   A cast that make some compilers more happy.
+
+
+
 1998-11-13   Gisle Aas <aas@sn.no>
 
    Release 2.09
