@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 #include "patchlevel.h"
-#if PATCHLEVEL <= 3 || (PATCHLEVEL == 4 && SUBVERSION <= 4)
+#if PATCHLEVEL <= 4 && !defined(PL_dowarn)
    #define PL_dowarn dowarn
 #endif
 
