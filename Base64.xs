@@ -35,7 +35,13 @@ extern "C" {
 }
 #endif
 
-#include "patchlevel.h"
+#ifndef PATCHLEVEL
+#    include <patchlevel.h>
+#    if !(defined(PERL_VERSION) || (SUBVERSION > 0 && defined(PATCHLEVEL)))
+#        include <could_not_find_Perl_patchlevel.h>
+#    endif
+#endif
+
 #if PATCHLEVEL <= 4 && !defined(PL_dowarn)
    #define PL_dowarn dowarn
 #endif
@@ -356,7 +362,7 @@ decode_qp(sv)
 
         PREINIT:
 	STRLEN len;
-	char *str = (unsigned char*)SvPVbyte(sv, len);
+	char *str = SvPVbyte(sv, len);
 	char const* end = str + len;
 	char *r;
 	char *whitespace = 0;
