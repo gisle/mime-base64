@@ -295,8 +295,8 @@ encode_qp(sv,...)
 	    if (p_len) {
 	        /* output plain text (with line breaks) */
 	        if (eol_len) {
-		    while (p_len + linelen > 75) {
-			STRLEN len = 75 - linelen;
+		    while (p_len + linelen > MAX_LINE - 1) {
+			STRLEN len = MAX_LINE - 1 - linelen;
 			sv_catpvn(RETVAL, p_beg, len);
 			p_beg += len;
 			p_len -= len;
@@ -320,7 +320,7 @@ encode_qp(sv,...)
 	    }
 	    else if (p < end) {
 		/* output escaped char (with line breaks) */
-		if (eol_len && linelen > 72) {
+		if (eol_len && linelen > MAX_LINE - 4) {
 		    sv_catpvn(RETVAL, "=", 1);
 		    sv_catpvn(RETVAL, eol, eol_len);
 		    linelen = 0;
