@@ -269,29 +269,29 @@ encode_qp(sv,...)
 	    eol_len = 1;
 	}
 
-	beg = SvPV(sv, sv_len);
-	end = beg + sv_len;
+	p = SvPV(sv, sv_len);
+	end = p + sv_len;
 
 	RETVAL = newSV(sv_len + 1);
 	sv_setpv(RETVAL, "");
 	linelen = 0;
 
-        p = beg;
 	while (1) {
 	    beg = p;
+
+	    /* skip past as much plain text as possible */
 	    while (p < end && qp_isplain(*p)) {
 	        p++;
 	    }
-	    if ((*p == '\n' || p == end)
-		&& p > beg && (*(p - 1) == '\t' || *(p - 1) == ' '))
-	    {
-	        p--;
+	    if (*p == '\n' || p == end) {
+		/* whitespace at end of line must be encoded */
 		while (p > beg && (*(p - 1) == '\t' || *(p - 1) == ' '))
 		    p--;
 	    }
 
 	    p_len = p - beg;
 	    if (p_len) {
+	        /* output plain text (with line breaks) */
 	        while (p_len + linelen > 75) {
 		    STRLEN len = 75 - linelen;
 		    sv_catpvn(RETVAL, beg, len);
@@ -315,6 +315,7 @@ encode_qp(sv,...)
 		linelen = 0;
 	    }
 	    else if (p < end) {
+		/* output escaped char (with line breaks) */
 		if (linelen > 72) {
 		    sv_catpvn(RETVAL, "=", 1);
 		    sv_catpvn(RETVAL, eol, eol_len);
