@@ -1,9 +1,13 @@
 /* $Id$
 
-Copyright (c) 1997,1998 Gisle Aas
+Copyright 1997-1998 Gisle Aas
 
-The tables and some of the code is borrowed from metamail, which comes
-with this message:
+This library is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+
+The tables and some of the code that used to be here was borrowed from
+metamail, which comes with this message:
 
   Copyright (c) 1991 Bell Communications Research, Inc. (Bellcore)
 
