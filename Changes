@@ -4,7 +4,7 @@
 
    By compiling the extension with PERL_NO_GET_CONTEXT we can
    make it slightly faster on a threaded perl.  No change on a
-   regular perl.  Patch provided by <beau@beaucox.com>.
+   regular perl.  Patch provided by Beau E. Cox <beau@beaucox.com>.
 
    Fixed missing ";" with assert.   Patch provided by
    Brendan O'Dea <bod@debian.org>.
