@@ -12,7 +12,7 @@ decode_base64 - Decode base64 string
 =head1 SYNOPSIS
 
  use MIME::Base64;
- 
+
  $encoded = encode_base64('Aladdin:open sesame');
  $decoded = decode_base64($encoded);
 
@@ -94,7 +94,7 @@ sub decode_base64 ($)
 
     my $str = shift;
     my $res = "";
-   
+
     $str =~ tr|A-Za-z0-9+/||cd;             # remove non-base64 chars (padding)
     $str =~ tr|A-Za-z0-9+/| -_|;            # convert to uuencoded format
     while ($str =~ /(.{1,60})/gs) {

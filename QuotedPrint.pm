@@ -12,7 +12,7 @@ decode_qp - Decode quoted-printable string
 =head1 SYNOPSIS
 
  use MIME::QuotedPrint;
- 
+
  $encoded = encode_qp($decoded);
  $decoded = decode_qp($encoded);
 
@@ -65,7 +65,7 @@ sub encode_qp ($)
     $res =~ s/([^ \t\n!-<>-~])/sprintf("=%02X", ord($1))/eg;  # rule #2,#3
     $res =~ s/([ \t]+)$/
       join('', map { sprintf("=%02X", ord($_)) }
-	           split('', $1)
+		   split('', $1)
       )/egm;                        # rule #3 (encode whitespace at eol)
 
     # rule #5 (lines must be shorter than 76 chars, but we are not allowed
@@ -73,7 +73,7 @@ sub encode_qp ($)
     my $brokenlines = "";
     $brokenlines .= "$1=\n" while $res =~ s/^(.{74}([^=]{2})?)//;
     # unnessesary to make a break at the last char
-    $brokenlines =~ s/=\n$// unless length $res; 
+    $brokenlines =~ s/=\n$// unless length $res;
 
     "$brokenlines$res";
 }
