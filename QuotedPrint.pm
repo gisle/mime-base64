@@ -45,19 +45,17 @@ Copyright 1995-1997 Gisle Aas.
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
-=head1 AUTHOR
-
-Gisle Aas <aas@sn.no>
-
 =cut
 
-require 5.002;
+use strict;
+use vars qw(@ISA @EXPORT $VERSION);
+
 require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(encode_qp decode_qp);
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-sub Version { $VERSION; }
+
 
 sub encode_qp ($)
 {
