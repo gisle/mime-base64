@@ -1,2 +1,13 @@
+1997-06-13
+
+   Release 2.01
+
+   Base64.xs: Avoid type convertion warnings with some compilers
+
+   Minor documentation updates
+
+
+
 1997-04-24
+
    Release 2.00, based on libwww-perl-5.08.
