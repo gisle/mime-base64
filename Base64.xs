@@ -295,13 +295,18 @@ encode_qp(sv,...)
 	    if (p_len) {
 	        /* output plain text (with line breaks) */
 	        if (eol_len) {
-		    while (p_len + linelen > MAX_LINE - 1) {
+		    STRLEN max_last_line = (*p == '\n' || p == end)
+					      ? MAX_LINE         /* .......\n */
+					      : (*(p + 1) == '\n' || (p + 1) == end)
+	                                        ? MAX_LINE - 3   /* ....=XX\n */
+	                                        : MAX_LINE - 4;  /* ...=XX=\n */
+		    while (p_len + linelen > max_last_line) {
 			STRLEN len = MAX_LINE - 1 - linelen;
+			if (len > p_len)
+			    len = p_len;
 			sv_catpvn(RETVAL, p_beg, len);
 			p_beg += len;
 			p_len -= len;
-			if (p_len <= 1)
-			    break;
 			sv_catpvn(RETVAL, "=", 1);
 			sv_catpvn(RETVAL, eol, eol_len);
 		        linelen = 0;
