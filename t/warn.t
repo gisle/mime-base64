@@ -7,6 +7,17 @@ BEGIN {
     }
 }
 
+BEGIN {
+    eval {
+	require warnings;
+    };
+    if ($@) {
+	print "1..0\n";
+	print $@;
+	exit;
+    }
+}
+
 use strict;
 use MIME::Base64 qw(decode_base64);
 
@@ -46,12 +57,12 @@ for (@warn) {
 }
 
 print "not " unless join("", @warn) eq <<'EOT'; print "ok 1\n";
-Warning: something's wrong at t/warn.t line 20.
-Premature end of base64 data at t/warn.t line 22.
-Premature padding of base64 data at t/warn.t line 23.
-Warning: something's wrong at t/warn.t line 24.
-Premature end of base64 data at t/warn.t line 27.
-Premature padding of base64 data at t/warn.t line 31.
-Warning: something's wrong at t/warn.t line 33.
-Warning: something's wrong at t/warn.t line 42.
+Warning: something's wrong at t/warn.t line 31.
+Premature end of base64 data at t/warn.t line 33.
+Premature padding of base64 data at t/warn.t line 34.
+Warning: something's wrong at t/warn.t line 35.
+Premature end of base64 data at t/warn.t line 38.
+Premature padding of base64 data at t/warn.t line 42.
+Warning: something's wrong at t/warn.t line 44.
+Warning: something's wrong at t/warn.t line 53.
 EOT
