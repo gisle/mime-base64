@@ -1,3 +1,16 @@
+2003-03-09   Gisle Aas <gisle@ActiveState.com>
+
+   Release 2.17
+
+   Make it reliable to disable base64 decoding warnings by
+   resetting $^W.  Would really like to be able to do real
+   lexical warnings but
+
+   Passing "" as $eol to encode_qp() disable soft line
+   breaks as well.
+
+
+
 2003-01-05   Gisle Aas <gisle@ActiveState.com>
 
    Release 2.16
