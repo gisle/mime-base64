@@ -75,7 +75,12 @@ use Carp qw(croak);
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-sub encode_qp ($;$)
+use MIME::Base64;  # try to load XS version of encode_qp
+unless (defined &encode_qp) {
+    *encode_qp = \&old_encode_qp;
+}
+
+sub old_encode_qp ($;$)
 {
     my $res = shift;
     if ($] >= 5.006) {

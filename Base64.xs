@@ -236,3 +236,101 @@ decode_base64(sv)
 
 	OUTPUT:
 	RETVAL
+
+
+MODULE = MIME::Base64		PACKAGE = MIME::QuotedPrint
+
+#define qp_isplain(c) ((c) == '\t' || ((c) >= ' ' && (c) <= '~') && (c) != '=')
+
+SV*
+encode_qp(sv,...)
+	SV* sv
+	PROTOTYPE: $;$
+
+	PREINIT:
+	char *eol;
+	STRLEN eol_len;
+	STRLEN sv_len;
+	STRLEN linelen;
+	char *beg;
+	char *p;
+	char *end;
+	STRLEN p_len;
+
+	CODE:
+#if PERL_REVISION == 5 && PERL_VERSION >= 6
+	sv_utf8_downgrade(sv, FALSE);
+#endif
+	/* set up EOL from the second argument if present, default to "\n" */
+	if (items > 1 && SvOK(ST(1))) {
+	    eol = SvPV(ST(1), eol_len);
+	} else {
+	    eol = "\n";
+	    eol_len = 1;
+	}
+
+	beg = SvPV(sv, sv_len);
+	end = beg + sv_len;
+
+	RETVAL = newSV(sv_len + 1);
+	sv_setpv(RETVAL, "");
+	linelen = 0;
+
+        p = beg;
+	while (1) {
+	    beg = p;
+	    while (p < end && qp_isplain(*p)) {
+	        p++;
+	    }
+	    if ((*p == '\n' || p == end)
+		&& p > beg && (*(p - 1) == '\t' || *(p - 1) == ' '))
+	    {
+	        p--;
+		while (p > beg && (*(p - 1) == '\t' || *(p - 1) == ' '))
+		    p--;
+	    }
+
+	    p_len = p - beg;
+	    if (p_len) {
+	        while (p_len + linelen > 75) {
+		    STRLEN len = 75 - linelen;
+		    sv_catpvn(RETVAL, beg, len);
+	            beg += len;
+		    p_len -= len;
+		    if (p_len > 1) {
+			sv_catpvn(RETVAL, "=", 1);
+			sv_catpvn(RETVAL, eol, eol_len);
+		        linelen = 0;
+		    }
+		}
+		if (p_len) {
+	            sv_catpvn(RETVAL, beg, p_len);
+	            linelen = p_len;
+		}
+	    }
+
+	    if (*p == '\n') {
+	        sv_catpvn(RETVAL, eol, eol_len);
+	        p++;
+		linelen = 0;
+	    }
+	    else if (p < end) {
+		if (linelen > 72) {
+		    sv_catpvn(RETVAL, "=", 1);
+		    sv_catpvn(RETVAL, eol, eol_len);
+		    linelen = 0;
+		}
+	        sv_catpvf(RETVAL, "=%02X", (unsigned char)*p);
+	        p++;
+	        linelen += 3;
+	    }
+	    else {
+		assert(p == end);
+	        break;
+	    }
+        }
+
+	OUTPUT:
+	RETVAL
+
+MODULE = MIME::Base64		PACKAGE = MIME::Base64

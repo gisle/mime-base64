@@ -113,5 +113,5 @@ print "not " unless decode_qp("foo  \r\n\r\nfoo =\r\n\r\nfoo=20\r\n\r\n") eq
                                 "foo\n\nfoo \nfoo \n\n";
 $testno++; print "ok $testno\n";
 
-print "not " if $] >= 5.006 && (eval 'encode_qp("XXX \x{100}")' || $@ !~ /^The Quoted-Printable encoding is only defined for bytes/);
+print "not " if $] >= 5.006 && (eval 'encode_qp("XXX \x{100}")' || !$@);
 $testno++; print "ok $testno\n";
