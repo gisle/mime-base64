@@ -9,7 +9,7 @@ BEGIN {
         }
 }
 
-print "1..1\n";
+print "1..2\n";
 
 require MIME::Base64;
 
@@ -19,4 +19,13 @@ eval {
 
 print "not " unless $@;
 print "ok 1\n";
+
+require MIME::QuotedPrint;
+
+eval {
+    MIME::QuotedPrint::encode(v300);
+};
+
+print "not " unless $@;
+print "ok 2\n";
 
