@@ -41,7 +41,7 @@ sequence even though this might be considered the right thing to do
 =item decode_qp($str);
 
 This function will return the plain text version of the string given
-as argument.
+as argument.  Lines with be "\n" terminated.
 
 =back
 
@@ -137,8 +137,9 @@ sub encode_qp ($)
 sub decode_qp ($)
 {
     my $res = shift;
-    $res =~ s/[ \t]+?(\r?\n)/$1/g;  # rule #3 (trailing space must be deleted)
-    $res =~ s/=\r?\n//g;            # rule #5 (soft line breaks)
+    $res =~ s/\r\n/\n/g;            # normalize newlines
+    $res =~ s/[ \t]+\n/\n/g;        # rule #3 (trailing space must be deleted)
+    $res =~ s/=\n//g;               # rule #5 (soft line breaks)
     if (ord('A') == 193) { # EBCDIC style machine
         if (ord('[') == 173) {
             $res =~ s/=([\da-fA-F]{2})/Encode::encode('cp1047',Encode::decode('iso-8859-1',pack("C", hex($1))))/ge;

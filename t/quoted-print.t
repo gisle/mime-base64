@@ -110,7 +110,7 @@ $testno++; print "ok $testno\n";
 
 # Same test but with "\r\n" terminated lines
 print "not " unless decode_qp("foo  \r\n\r\nfoo =\r\n\r\nfoo=20\r\n\r\n") eq
-                                "foo\r\n\r\nfoo \r\nfoo \r\n\r\n";
+                                "foo\n\nfoo \nfoo \n\n";
 $testno++; print "ok $testno\n";
 
 print "not " if $] >= 5.006 && (eval 'encode_qp("XXX \x{100}")' || $@ !~ /^The Quoted-Printable encoding is only defined for bytes/);
