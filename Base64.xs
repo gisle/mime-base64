@@ -173,13 +173,16 @@ decode_base64(sv)
 
 	    if (c2 == EOF || c3 == EOF || c4 == EOF) {
 		if (dowarn) warn("Premature end of base64 data");
+	        if (c2 == EOF) break;
+		if (c3 == EOF) c3 = '=';
+		c4 = '=';
+	    } else if (c1 == '=' || c2 == '=') {
+		if (dowarn) warn("Premature padding of base64 data");
 		break;
-	    }
-
-	    if (c1 == '=' || c2 == '=')
-		break;
+            }
 
 	    /* printf("C1=%d,C2=%d,C3=%d,C4=%d\n", c1, c2, c3, c4); */
+
 	    c1 = index_64[c1];
 	    c2 = index_64[c2];
 	    *r++ = (c1<<2) | ((c2&0x30)>>4);
