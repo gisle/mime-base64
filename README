@@ -1,14 +1,26 @@
-This package contains a Base64 encoder/decoder implemented as an XS
-function.  The module is compatible with the module distributed
-together with libwww-perl.
+This package contains a base64 encoder/decoder and a quoted-printable
+encoder/decoder.  These encoding methods are specified in RFC 2045 -
+MIME (Multipurpose Internet Mail Extensions).
 
-The Base64 encoding is specified in RFC 2045 - I<MIME (Multipurpose
-Internet Mail Extensions)>. The Base64 encoding is designed to
-represent arbitrary sequences of octets in a form that need not be
-humanly readable. A 65-character subset ([A-Za-z0-9+/=]) of US-ASCII
-is used, enabling 6 bits to be represented per printable character.
+The base64 encoding is designed to represent arbitrary sequences of
+octets in a form that need not be humanly readable. A 65-character
+subset ([A-Za-z0-9+/=]) of US-ASCII is used, enabling 6 bits to be
+represented per printable character.
 
-Installation:
+The quoted-printable encoding is intended to represent data that
+largely consists of bytes that correspond to printable characters in
+the ASCII character set.  Non-printable characters (as defined by
+enghlish americans) are represented by a triplet consisting of the
+character "=" followed by two hexadecimal digits.
+
+The MIME::Base64 and MIME::QuotedPrint modules used to be part of
+libwww-perl package.  They are now distributed separately (this
+package).  The main news is that the base64 encoder is implemented by
+XS functions.  This makes it about 20 times faster than the old
+implementation in perl.
+
+In order to install and use this package you will need Perl version
+5.002 or better.
 
    perl Makefile.PL
    make
