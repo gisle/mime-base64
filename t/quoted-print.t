@@ -67,18 +67,24 @@ y. -- H. L. Mencken"],
    ["$x70!23456=\n"	=> "$x70!2345=\n6=3D\n"],
 
    # Not allowed to break =XX escapes using soft line break
-   ["$x70===xxxxx" => "$x70=3D=\n=3D=3Dxxxxx"],
-   ["$x70!===xxxx" => "$x70!=3D=\n=3D=3Dxxxx"],
-   ["$x70!2===xxx" => "$x70!2=3D=\n=3D=3Dxxx"],
-   ["$x70!23===xx" => "$x70!23=\n=3D=3D=3Dxx"],
-   ["$x70!234===x" => "$x70!234=\n=3D=3D=3Dx"],
-   #                             ^
-   #                     70123456|
-   #                            max
-   #                         line width
+   ["$x70===xxxxx"  => "$x70=3D=\n=3D=3Dxxxxx"],
+   ["$x70!===xxxx"  => "$x70!=3D=\n=3D=3Dxxxx"],
+   ["$x70!2===xxx"  => "$x70!2=3D=\n=3D=3Dxxx"],
+   ["$x70!23===xx"  => "$x70!23=\n=3D=3D=3Dxx"],
+   ["$x70!234===x"  => "$x70!234=\n=3D=3D=3Dx"],
+   ["$x70!2=\n"     => "$x70!2=3D\n"],
+   ["$x70!23=\n"    => "$x70!23=\n=3D\n"],
+   ["$x70!234=\n"   => "$x70!234=\n=3D\n"],
+   ["$x70!2345=\n"  => "$x70!2345=\n=3D\n"],
+   ["$x70!23456=\n" => "$x70!2345=\n6=3D\n"],
+   #                              ^
+   #                      70123456|
+   #                             max
+   #                          line width
 
-   # some extra special cases
+   # some extra special cases we have had problems with
    ["$x70!2=x=x" => "$x70!2=3D=\nx=3Dx"],
+   ["$x70!2345$x70!2345$x70!23456\n", "$x70!2345=\n$x70!2345=\n$x70!23456\n"],
 );
 
 $notests = @tests + 3;
