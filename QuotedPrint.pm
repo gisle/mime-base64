@@ -60,8 +60,8 @@ sub qp_encode
 sub qp_decode
 {
     $res = shift;
-    $res =~ s/\s+$//gm;  # rule #3 (any trailing white space must be deleted)
-    $res =~ s/=\n$//;    # rule #5 (soft line breaks)
+    $res =~ s/\s+(\r?\n)/$1/g; # rule #3 (trailing white space must be deleted)
+    $res =~ s/=\r?\n//g;       # rule #5 (soft line breaks)
     $res =~ s/=([\da-fA-F]{2})/pack("C", hex($1))/ge;
     $res;
 }
