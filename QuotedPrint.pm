@@ -73,7 +73,7 @@ require Exporter;
 
 use Carp qw(croak);
 
-$VERSION = "2.16";
+$VERSION = "2.19";
 
 use MIME::Base64;  # try to load XS version of encode_qp
 unless (defined &encode_qp) {

@@ -417,6 +417,11 @@ decode_qp(sv)
                 }
 	    }
 	}
+	if (whitespace) {
+	    while (whitespace < str) {
+		*r++ = *whitespace++;
+	    }
+        }
 	*r = '\0';
 	SvCUR_set(RETVAL, r - SvPVX(RETVAL));
 
