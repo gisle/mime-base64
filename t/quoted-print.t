@@ -1,4 +1,9 @@
-#!/local/bin/perl -w
+BEGIN {
+        if ($ENV{PERL_CORE}) {
+                chdir 't' if -d 't';
+                @INC = '../lib';
+        }
+}
 
 use MIME::QuotedPrint;
 
@@ -11,7 +16,7 @@ $x70 = "x" x 70;
     "quoted printable"],
 
    # 8-bit chars should be encoded
-   ["våre kjære norske tegn bør æres" =>
+   ["v\xe5re kj\xe6re norske tegn b\xf8r \xe6res" =>
     "v=E5re kj=E6re norske tegn b=F8r =E6res"],
 
    # trailing space should be encoded
@@ -68,13 +73,17 @@ y. -- H. L. Mencken"],
    #                        line width
 );
 
-$notests = @tests + 2;
+$notests = @tests + 3;
 print "1..$notests\n";
 
 $testno = 0;
 for (@tests) {
     $testno++;
     ($plain, $encoded) = @$_;
+    if (ord('A') == 193) {  # EBCDIC 8 bit chars are different
+        if ($testno == 2) { $plain =~ s/\xe5/\x47/; $plain =~ s/\xe6/\x9c/g; $plain =~ s/\xf8/\x70/; }
+        if ($testno == 7) { $plain =~ s/\xff/\xdf/; }
+    }
     $x = encode_qp($plain);
     if ($x ne $encoded) {
 	print "Encode test failed\n";
@@ -104,3 +113,5 @@ print "not " unless decode_qp("foo  \r\n\r\nfoo =\r\n\r\nfoo=20\r\n\r\n") eq
                                 "foo\r\n\r\nfoo \r\nfoo \r\n\r\n";
 $testno++; print "ok $testno\n";
 
+print "not " if $] >= 5.006 && (eval 'encode_qp("XXX \x{100}")' || $@ !~ /^The Quoted-Printable encoding is only defined for bytes/);
+$testno++; print "ok $testno\n";

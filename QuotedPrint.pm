@@ -64,22 +64,61 @@ modify it under the same terms as Perl itself.
 
 use strict;
 use vars qw(@ISA @EXPORT $VERSION);
+if (ord('A') == 193) { # on EBCDIC machines we need translation help
+    require Encode;
+}
 
 require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(encode_qp decode_qp);
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+use Carp qw(croak);
 
+$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 sub encode_qp ($)
 {
     my $res = shift;
-    $res =~ s/([^ \t\n!-<>-~])/sprintf("=%02X", ord($1))/eg;  # rule #2,#3
-    $res =~ s/([ \t]+)$/
-      join('', map { sprintf("=%02X", ord($_)) }
-		   split('', $1)
-      )/egm;                        # rule #3 (encode whitespace at eol)
+    if ($] >= 5.006) {
+	require bytes;
+	if (bytes::length($res) > length($res) ||
+	    ($] >= 5.008 && $res =~ /[^\0-\xFF]/)) {
+	    croak("The Quoted-Printable encoding is only defined for bytes");
+	}
+    }
+
+    # Do not mention ranges such as $res =~ s/([^ \t\n!-<>-~])/sprintf("=%02X", ord($1))/eg;
+    # since that will not even compile on an EBCDIC machine (where ord('!') > ord('<')).
+    if (ord('A') == 193) { # EBCDIC style machine
+        if (ord('[') == 173) {
+            $res =~ s/([^ \t\n!"#\$%&'()*+,\-.\/0-9:;<>?\@A-Z[\\\]^_`a-z{|}~])/sprintf("=%02X", ord(Encode::encode('iso-8859-1',Encode::decode('cp1047',$1))))/eg;  # rule #2,#3
+            $res =~ s/([ \t]+)$/
+              join('', map { sprintf("=%02X", ord(Encode::encode('iso-8859-1',Encode::decode('cp1047',$_)))) }
+        		   split('', $1)
+              )/egm;                        # rule #3 (encode whitespace at eol)
+        }
+        elsif (ord('[') == 187) {
+            $res =~ s/([^ \t\n!"#\$%&'()*+,\-.\/0-9:;<>?\@A-Z[\\\]^_`a-z{|}~])/sprintf("=%02X", ord(Encode::encode('iso-8859-1',Encode::decode('posix-bc',$1))))/eg;  # rule #2,#3
+            $res =~ s/([ \t]+)$/
+              join('', map { sprintf("=%02X", ord(Encode::encode('iso-8859-1',Encode::decode('posix-bc',$_)))) }
+        		   split('', $1)
+              )/egm;                        # rule #3 (encode whitespace at eol)
+        }
+        elsif (ord('[') == 186) {
+            $res =~ s/([^ \t\n!"#\$%&'()*+,\-.\/0-9:;<>?\@A-Z[\\\]^_`a-z{|}~])/sprintf("=%02X", ord(Encode::encode('iso-8859-1',Encode::decode('cp37',$1))))/eg;  # rule #2,#3
+            $res =~ s/([ \t]+)$/
+              join('', map { sprintf("=%02X", ord(Encode::encode('iso-8859-1',Encode::decode('cp37',$_)))) }
+        		   split('', $1)
+              )/egm;                        # rule #3 (encode whitespace at eol)
+        }
+    }
+    else { # ASCII style machine
+        $res =~  s/([^ \t\n!"#\$%&'()*+,\-.\/0-9:;<>?\@A-Z[\\\]^_`a-z{|}~])/sprintf("=%02X", ord($1))/eg;  # rule #2,#3
+        $res =~ s/([ \t]+)$/
+          join('', map { sprintf("=%02X", ord($_)) }
+    		   split('', $1)
+          )/egm;                        # rule #3 (encode whitespace at eol)
+    }
 
     # rule #5 (lines must be shorter than 76 chars, but we are not allowed
     # to break =XX escapes.  This makes things complicated :-( )
@@ -100,7 +139,20 @@ sub decode_qp ($)
     my $res = shift;
     $res =~ s/[ \t]+?(\r?\n)/$1/g;  # rule #3 (trailing space must be deleted)
     $res =~ s/=\r?\n//g;            # rule #5 (soft line breaks)
-    $res =~ s/=([\da-fA-F]{2})/pack("C", hex($1))/ge;
+    if (ord('A') == 193) { # EBCDIC style machine
+        if (ord('[') == 173) {
+            $res =~ s/=([\da-fA-F]{2})/Encode::encode('cp1047',Encode::decode('iso-8859-1',pack("C", hex($1))))/ge;
+        }
+        elsif (ord('[') == 187) {
+            $res =~ s/=([\da-fA-F]{2})/Encode::encode('posix-bc',Encode::decode('iso-8859-1',pack("C", hex($1))))/ge;
+        }
+        elsif (ord('[') == 186) {
+            $res =~ s/=([\da-fA-F]{2})/Encode::encode('cp37',Encode::decode('iso-8859-1',pack("C", hex($1))))/ge;
+        }
+    }
+    else { # ASCII style machine
+        $res =~ s/=([\da-fA-F]{2})/pack("C", hex($1))/ge;
+    }
     $res;
 }
 
