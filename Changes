@@ -1,3 +1,12 @@
+1998-11-13   Gisle Aas <aas@sn.no>
+
+   Release 2.09
+
+   The 2.08 release did not compile with perl5.005_53, because
+   all simple globals now need to be prefixed with "PL_".
+
+
+
 1998-10-22   Gisle Aas <aas@sn.no>
 
    Release 2.08
