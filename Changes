@@ -2,14 +2,19 @@
 
    Release 2.14
 
-   MIME::QuotedPrint now also implemented as XS function which
-   should make it faster.  The encode_qp() function now takes
-   an $eol argument in the same was as encode_base64() does.
+   MIME::QuotedPrint functions now also implemented using XS
+   which make them faster.  2-3 times faster when encoding line by
+   line and as much as 200 times faster on long binary input.  There
+   is probably some breakage on non-ASCII systems from this.
 
-   Change in behaviour: the decode_qp() function now turns \r\n
-   terminated lines into \n terminated lines.
+   The encode_qp() function now takes an $eol argument in the
+   same way as encode_base64() does.
 
-   Included {en,de}code-{base64,qp} scripts.
+   Slight change in behaviour: the decode_qp() function now turns
+   \r\n terminated lines into \n terminated lines.  This makes is
+   more likely that encode_qp(decode_qp()) round-trip properly.
+
+   Included {en,de}code-{base64,qp} utility scripts.
 
 
 
