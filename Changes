@@ -5,6 +5,8 @@
    Fixed bogues "Premature end of base64 data" warning.  Bug spotted
    by Dwayne Jacques Fontenot.
 
+   Workaround for Redhat shipping trial releases of perl.
+
 
 
 1998-12-18   Gisle Aas <aas@sn.no>
