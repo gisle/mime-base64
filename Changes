@@ -1,9 +1,13 @@
 1998-01-27   Gisle Aas <aas@sn.no>
 
    Release 2.05
-   
-   The encode_base64() and decode_base64() now allocate one byte less
-   space in the result strings returned.  No big deal!
+
+   The decode_base64() would previously allocate a too short buffer for the
+   result string when the trailing "==" padding was missing in the string to
+   be decoded.
+
+   The encode_base64() now allocate one byte less space in the result
+   strings returned.
 
 
 
