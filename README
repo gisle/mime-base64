@@ -9,25 +9,30 @@ represented per printable character.
 
 The quoted-printable encoding is intended to represent data that
 largely consists of bytes that correspond to printable characters in
-the ASCII character set.  Non-printable characters (as defined by
-enghlish americans) are represented by a triplet consisting of the
-character "=" followed by two hexadecimal digits.
+the ASCII character set.  Non-printable characters are represented by
+a triplet consisting of the character "=" followed by two hexadecimal
+digits.
 
 The MIME::Base64 and MIME::QuotedPrint modules used to be part of
 libwww-perl package.  They are now distributed separately (this
-package).  The main news is that the base64 encoder is implemented by
-XS functions.  This makes it about 20 times faster than the old
-implementation in perl.
+package).  The main improvement is that the base64 encoder/decoder is
+implemented by XS functions.  This makes it about 20 times faster than
+the old implementation in perl.
 
 In order to install and use this package you will need Perl version
-5.002 or better.
+5.002 or better.  Installation as usual:
 
    perl Makefile.PL
    make
    make test
    make install
 
-Copyright 1995-1997 Gisle Aas.
+The library can also be installed without XS support (for instance
+because you don't have a working compiler installed).  Simply remove
+the Base64.xs file before running 'perl Makefile.PL' and rest should
+work the same although encoding and decoding will be much slower.
+
+Copyright 1995-1997 Gisle Aas.  <gisle@aas.no>
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -23,7 +23,7 @@ Quoted-Printable encoding specified in RFC 2045 - I<MIME (Multipurpose
 Internet Mail Extensions)>.  The Quoted-Printable encoding is intended
 to represent data that largely consists of bytes that correspond to
 printable characters in the ASCII character set.  Non-printable
-characters (as defined by enghlish americans) are represented by a
+characters (as defined by english americans) are represented by a
 triplet consisting of the character "=" followed by two hexadecimal
 digits.
 
