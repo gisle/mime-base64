@@ -1,5 +1,13 @@
 1998-10-21   Gisle Aas <aas@sn.no>
 
+   Release 2.08
+
+   Found another tweak to speed up decode_base64() with another 3%.
+
+
+
+1998-10-21   Gisle Aas <aas@sn.no>
+
    Release 2.07
 
    Faster and smarter C implementation of the decode_base64()
