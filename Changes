@@ -1,3 +1,12 @@
+1997-07-10   Gisle Aas <aas@sn.no>
+
+   Release 2.03
+
+   Decode_base64() doesn't croak on premature ended data any more.
+   A warning is generated instead if running under -w.
+   
+
+
 1997-06-27   Gisle Aas <aas@sn.no>
 
    Release 2.02
