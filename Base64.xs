@@ -46,6 +46,13 @@ extern "C" {
    #define PL_dowarn dowarn
 #endif
 
+#ifdef G_WARN_ON
+   #define DOWARN (PL_dowarn & G_WARN_ON)
+#else
+   #define DOWARN PL_dowarn
+#endif
+
+
 #define MAX_LINE  76 /* size of encoded lines */
 
 static char basis_64[] =
@@ -209,7 +216,7 @@ decode_base64(sv)
 
 		if (str == end) {
 		    if (i < 4) {
-			if (i && PL_dowarn)
+			if (i && DOWARN)
 			    warn("Premature end of base64 data");
 			if (i < 2) goto thats_it;
 			if (i == 2) c[2] = EQ;
@@ -220,7 +227,7 @@ decode_base64(sv)
             } while (i < 4);
 	
 	    if (c[0] == EQ || c[1] == EQ) {
-		if (PL_dowarn) warn("Premature padding of base64 data");
+		if (DOWARN) warn("Premature padding of base64 data");
 		break;
             }
 	    /* printf("c0=%d,c1=%d,c2=%d,c3=%d\n", c[0],c[1],c[2],c[3]);*/

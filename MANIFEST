@@ -12,3 +12,4 @@ decode-base64	Decode Quoted-Printable files
 t/base64.t	Test that it works
 t/quoted-print.t
 t/unicode.t
+t/warn.t
