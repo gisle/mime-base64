@@ -1,6 +1,6 @@
 /* $Id$
 
-Copyright 1997-2003 Gisle Aas
+Copyright 1997-2004 Gisle Aas
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -76,7 +76,7 @@ module to select the byte encoding you want.  For example:
 
 =head1 COPYRIGHT
 
-Copyright 1995-1997,2002-2003 Gisle Aas.
+Copyright 1995-1997,2002-2004 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -114,7 +114,7 @@ of four base64 chars:
 
 =head1 COPYRIGHT
 
-Copyright 1995-1999, 2001-2003 Gisle Aas.
+Copyright 1995-1999, 2001-2004 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -141,7 +141,7 @@ require DynaLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
-$VERSION = '2.22';
+$VERSION = '2.23';
 
 eval { bootstrap MIME::Base64 $VERSION; };
 if ($@) {
