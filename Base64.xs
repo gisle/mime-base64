@@ -98,7 +98,7 @@ encode_base64(sv,...)
 	}
 
 	/* allocate a result buffer */
-	RETVAL = newSV(rlen);
+	RETVAL = newSV(rlen ? rlen : 1);
 	SvPOK_on(RETVAL);	
 	SvCUR_set(RETVAL, rlen);
 	r = SvPVX(RETVAL);
@@ -148,13 +148,15 @@ decode_base64(sv)
 	PREINIT:
 	unsigned char *str;
 	STRLEN len;
+	STRLEN rlen;
 	char *r;
 	int c1, c2, c3, c4;
 
 	CODE:
 	str = (unsigned char*)SvPV(sv, len);
 
-	RETVAL = newSV(len/4*3);  /* enough, but might waste some space */
+        rlen = len * 3 / 4;
+	RETVAL = newSV(rlen ? rlen : 1);
 	SvPOK_on(RETVAL);
 	r = SvPVX(RETVAL);
 
