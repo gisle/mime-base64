@@ -69,12 +69,12 @@ encode_base64(sv,...)
 	PROTOTYPE: $;$
 
 	PREINIT:
-	char *str;   /* string to encode */
-	int len;     /* length of the string */
-        char *eol;   /* the end-of-line sequence to use */
-        int eollen;  /* length of the EOL sequence */
-	char *r;     /* result string */
-	int rlen;    /* length of result string */
+	char *str;     /* string to encode */
+	STRLEN len;    /* length of the string */
+        char *eol;     /* the end-of-line sequence to use */
+        STRLEN eollen; /* length of the EOL sequence */
+	char *r;       /* result string */
+	STRLEN rlen;   /* length of result string */
 	unsigned char c1, c2, c3;
 	int chunk;
 
@@ -146,7 +146,7 @@ decode_base64(sv)
 
 	PREINIT:
 	unsigned char *str;
-	int len;
+	STRLEN len;
 	char *r;
 	int c1, c2, c3, c4;
 
