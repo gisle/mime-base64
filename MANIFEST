@@ -3,7 +3,8 @@ Base64.xs	Encoder and decoder written in C
 Changes		What's new
 MANIFEST	This file
 Makefile.PL	Writes the Makefile
-QuotedPrint.pm  MIME::QuotedPrint
-README		Please do
+QuotedPrint.pm  MIME::QuotedPrint module, encoder and decoder
+README		Please do!
+benchmark       Test how fast it runs
 t/base64.t	Test that it works
 t/quoted-print.t
