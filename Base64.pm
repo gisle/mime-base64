@@ -65,6 +65,7 @@ require Exporter;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 sub Version { $VERSION; }
 
+use Carp ();
 use integer;
 
 sub encode_base64 ($;$)
@@ -90,12 +91,15 @@ sub encode_base64 ($;$)
 
 sub decode_base64 ($)
 {
-    local($^W) = 0; # unpack("u",...) gives bogus warning in 5.001m, 5.002beta2
+    local($^W) = 0; # unpack("u",...) gives bogus warning in 5.00[123]
 
     my $str = shift;
     my $res = "";
 
-    $str =~ tr|A-Za-z0-9+/||cd;             # remove non-base64 chars (padding)
+    $str =~ tr|A-Za-z0-9+=/||cd;            # remove non-base64 chars
+    Carp::croak("Base64 decoder requires string length to be a multiple of 4")
+      if length($str) % 4;
+    $str =~ s/=+$//;                        # remove padding
     $str =~ tr|A-Za-z0-9+/| -_|;            # convert to uuencoded format
     while ($str =~ /(.{1,60})/gs) {
 	my $len = chr(32 + length($1)*3/4); # compute length byte
