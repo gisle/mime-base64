@@ -1,6 +1,6 @@
 use MIME::Base64;
 
-print "1..273\n";
+print "1..280\n";
 
 print "Testing MIME::Base64-", $MIME::Base64::VERSION, "\n";
 
@@ -326,6 +326,7 @@ sub encodeTest
 sub decodeTest
 {
     print "decode test:\n";
+    local $SIG{__WARN__} = sub { print $_[0] };  # avoid warnings on stderr
 
     my @decode_tests = (
 	['YWE='   => 'aa'],
@@ -333,6 +334,15 @@ sub decodeTest
 	['Y WE='  => 'aa'],
 	['YWE= '  => 'aa'],
 	["Y\nW\r\nE=" => 'aa'],
+
+	# These will generate some warnings
+        ['YWE=====' => 'aa'],    # extra padding
+	['YWE'      => 'aa'],    # missing padding
+        ['YWFh====' => 'aaa'],
+        ['YQ'       => 'a'],
+        ['Y'        => ''],
+        [''         => ''],
+        [undef()    => ''],
     );
 
     for $test (@decode_tests) {
