@@ -1,23 +1,23 @@
-/*
+/* $Id$
 
 Copyright (c) 1997 Gisle Aas
 
 The tables and some of the code is borrowed from metamail, which comes
 with this message:
 
+  Copyright (c) 1991 Bell Communications Research, Inc. (Bellcore)
 
-Copyright (c) 1991 Bell Communications Research, Inc. (Bellcore)
+  Permission to use, copy, modify, and distribute this material 
+  for any purpose and without fee is hereby granted, provided 
+  that the above copyright notice and this permission notice 
+  appear in all copies, and that the name of Bellcore not be 
+  used in advertising or publicity pertaining to this 
+  material without the specific, prior written permission 
+  of an authorized representative of Bellcore.  BELLCORE 
+  MAKES NO REPRESENTATIONS ABOUT THE ACCURACY OR SUITABILITY 
+  OF THIS MATERIAL FOR ANY PURPOSE.  IT IS PROVIDED "AS IS", 
+  WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
 
-Permission to use, copy, modify, and distribute this material 
-for any purpose and without fee is hereby granted, provided 
-that the above copyright notice and this permission notice 
-appear in all copies, and that the name of Bellcore not be 
-used in advertising or publicity pertaining to this 
-material without the specific, prior written permission 
-of an authorized representative of Bellcore.  BELLCORE 
-MAKES NO REPRESENTATIONS ABOUT THE ACCURACY OR SUITABILITY 
-OF THIS MATERIAL FOR ANY PURPOSE.  IT IS PROVIDED "AS IS", 
-WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
 */
 
 
@@ -34,8 +34,8 @@ extern "C" {
 static char basis_64[] =
    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-#define XX 255
-#define EQ 254
+#define XX 255  /* illegal base64 char */
+#define EQ 254  /* padding */
 static unsigned char index_64[256] = {
     XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
     XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
@@ -56,10 +56,10 @@ static unsigned char index_64[256] = {
     XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
 };
 
-#define MAX_LINE    76
-
-#define GETC(str,len) (len > 0 ? len--,*str++ : EOF)
+#define MAX_LINE       76
+#define GETC(str,len)  (len > 0 ? len--,*str++ : EOF)
 #define INVALID_B64(c) (index_64[(unsigned char)c] == XX)
+
 
 MODULE = MIME::Base64		PACKAGE = MIME::Base64
 
@@ -170,18 +170,15 @@ decode_base64(sv)
                c4 = GETC(str, len);
            } while (c4 != EOF && INVALID_B64(c4));
 
-	   if (c2 == EOF || c3 == EOF || c4 == EOF) {
+	   if (c2 == EOF || c3 == EOF || c4 == EOF)
 	       croak("Premature end of base64 data");
-	   }
 
 	   if (c1 == '=' || c2 == '=')
 	      break;
 
 	   /* printf("C1=%d,C2=%d,C3=%d,C4=%d\n", c1, c2, c3, c4); */
-
 	   c1 = index_64[c1];
 	   c2 = index_64[c2];
-
 	   *r++ = (c1<<2) | ((c2&0x30)>>4);
 
 	   if (c3 == '=') {
