@@ -41,8 +41,8 @@ broken into lines.
 
 Decode a base64 string by calling the decode_base64() function.  This
 function takes a single argument which is the string to decode and
-returns the decoded data.  Any character not part of the legal base64
-chars is ignored.
+returns the decoded data.  Any character not part of the legal Base64
+character set is ignored.
 
 =back
 
@@ -75,7 +75,7 @@ or if you know you have enough memory
 
 =head1 COPYRIGHT
 
-Copyright 1995-1997 Gisle Aas.
+Copyright 1995-1998 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -98,7 +98,7 @@ require DynaLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
-$VERSION = '2.04';
+$VERSION = '2.05';
 
 eval { bootstrap MIME::Base64 $VERSION; };
 if ($@) {
@@ -111,8 +111,8 @@ if ($@) {
 }
 
 # Historically this module has been implemented as pure perl code.
-# The XS implementation runs about 20 times faster, but the perl
-# code might be more portable, so it is still supported.
+# The XS implementation runs about 20 times faster, but the Perl
+# code might be more portable, so it is still here.
 
 use integer;
 
