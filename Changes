@@ -1,4 +1,18 @@
-1997-06-13
+1997-06-27   Gisle Aas <aas@sn.no>
+
+   Release 2.01
+
+   QuotedPrint fix by Roderick Schertler <roderick@argon.org>:
+
+      - Long lines were not broken unless they're at the beginning
+        of the text
+
+      - Lines near but not over 76 chars are broken when they
+        shouldn't be
+
+
+
+1997-06-13   Gisle Aas <aas@sn.no>
 
    Release 2.01
 
@@ -8,6 +22,6 @@
 
 
 
-1997-04-24
+1997-04-24   Gisle Aas <aas@sn.no>
 
    Release 2.00, based on libwww-perl-5.08.
