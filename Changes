@@ -5,6 +5,15 @@
    Fixed the XS based decode_qp() for strings where a =XX
    sequence was followed by digits.
 
+   Faster encode_qp() for long strings with lots of chars
+   that need escaping.
+
+   The old_decode_base64() function introduced in 2.13
+   was returning undef for empty input on olders perls.
+   This problem has been fixed.
+
+
+
 2003-01-01   Gisle Aas <gisle@ActiveState.com>
 
    Release 2.14
