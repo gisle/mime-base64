@@ -55,20 +55,39 @@ and Joerg Reichelt <j.reichelt@nexor.co.uk> and code posted to
 comp.lang.perl <3pd2lp$6gf@wsinti07.win.tue.nl> by Hans Mulder
 <hansm@wsinti07.win.tue.nl>
 
+XS implementation use code from metamail.
+
 =cut
+
+use strict;
+use vars qw(@ISA @EXPORT $VERSION $OLD_CODE);
 
 require 5.002;
 require Exporter;
-@ISA = qw(Exporter);
+require DynaLoader;
+@ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-sub Version { $VERSION; }
+
+eval { bootstrap MIME::Base64 $VERSION; };
+if ($@) {
+    # can't bootstrap XS implementation, use perl implementation
+    *encode_base64 = \&old_encode_base64;
+    *decode_base64 = \&old_decode_base64;
+
+    $OLD_CODE = $@;
+    #warn $@ if $^W;
+}
+
+# Historically this module has been implemented as pure perl code.
+# The XS implementation runs about 25 times faster, but the perl
+# code might be more portable.
 
 use Carp ();
 use integer;
 
-sub encode_base64 ($;$)
+sub old_encode_base64 ($;$)
 {
     my $res = "";
     my $eol = $_[1];
@@ -90,7 +109,7 @@ sub encode_base64 ($;$)
 }
 
 
-sub decode_base64 ($)
+sub old_decode_base64 ($)
 {
     local($^W) = 0; # unpack("u",...) gives bogus warning in 5.00[123]
 
