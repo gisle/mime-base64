@@ -34,13 +34,24 @@ The following functions are provided:
 =item encode_qp($str, $eol)
 
 This function will return an encoded version of the string given as
-argument.  The second argument is the line ending sequence to use.  It
-is optional and defaults to "\n".
+argument.
+
+The second argument is the line ending sequence to use.  It is
+optional and defaults to "\n".  Every occurence of "\n" will be
+replaced with this string and it will also be used for additional
+"soft line breaks" to ensure that no line is longer than 76
+characters.  You might want to pass it as "\015\012" to produce data
+suitable external consumption.  The string "\r\n" will produce the
+same result on many platforms, but not all.
+
+An $eol of "" special.  If passed no "soft line breaks" are introduced
+and any literal "\n" in the original data is encoded as well.
 
 =item decode_qp($str);
 
 This function will return the plain text version of the string given
-as argument.  Lines will be "\n" terminated.
+as argument.  The lines of the result will be "\n" terminated even it
+the $str argument contains "\r\n" terminated lines.
 
 =back
 
@@ -52,12 +63,27 @@ call them as:
   $encoded = MIME::QuotedPrint::encode($decoded);
   $decoded = MIME::QuotedPrint::decode($encoded);
 
+Perl v5.6 and better allow extended Unicode characters in strings.
+Such strings cannot be encoded directly as the quoted-printable
+encoding is only defined for bytes.  The solution is to use the Encode
+module to select the byte encoding you want.  For example:
+
+    use MIME::QuotedPrint qw(encode_qp);
+    use Encode qw(encode);
+
+    $encoded = encode_qp(encode("UTF-8", "\x{FFFF}\n"));
+    print $encoded;
+
 =head1 COPYRIGHT
 
 Copyright 1995-1997,2002-2003 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<MIME::Base64>
 
 =cut
 

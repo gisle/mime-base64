@@ -127,6 +127,10 @@ Mulder <hansm@wsinti07.win.tue.nl>
 The XS implementation use code from metamail.  Copyright 1991 Bell
 Communications Research, Inc. (Bellcore)
 
+=head1 SEE ALSO
+
+L<MIME::QuotedPrint>
+
 =cut
 
 use strict;
