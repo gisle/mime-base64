@@ -155,12 +155,13 @@ use integer;
 
 sub old_encode_base64 ($;$)
 {
-    my $res = "";
     my $eol = $_[1];
     $eol = "\n" unless defined $eol;
-    pos($_[0]) = 0;                          # ensure start at the beginning
 
-    $res = join '', map( pack('u',$_)=~ /^.(\S*)/, ($_[0]=~/(.{1,45})/gs));
+    my $res = pack("u", $_[0]);
+    # Remove first character of each line, remove newlines
+    $res =~ s/^.//mg;
+    $res =~ s/\n//g;
 
     $res =~ tr|` -_|AA-Za-z0-9+/|;               # `# help emacs
     # fix padding at the end
@@ -187,8 +188,22 @@ sub old_decode_base64 ($)
     $str =~ s/=+$//;                        # remove padding
     $str =~ tr|A-Za-z0-9+/| -_|;            # convert to uuencoded format
 
-    return join'', map( unpack("u", chr(32 + length($_)*3/4) . $_),
-	                $str =~ /(.{1,60})/gs);
+    ## I guess this could be written as
+    #return unpack("u", join('', map( chr(32 + length($_)*3/4) . $_,
+    #			$str =~ /(.{1,60})/gs) ) );
+    ## but I do not like that...
+    my $uustr = '';
+    my ($i, $l);
+    $l = length($str) - 60;
+    for ($i = 0; $i <= $l; $i += 60) {
+	$uustr .= "M" . substr($str, $i, 60);
+    }
+    $str = substr($str, $i);
+    # and any leftover chars
+    if ($str ne "") {
+	$uustr .= chr(32 + length($str)*3/4) . $str;
+    }
+    return unpack ("u", $uustr);
 }
 
 # Set up aliases so that these functions also can be called as

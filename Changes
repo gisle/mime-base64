@@ -4,6 +4,9 @@
 
    Sync up with bleadperl.
 
+   Improved version of the old_{en,de}code_base64 functions
+   contributed by Paul Szabo <psz@maths.usyd.edu.au>.
+
 
 
 2001-02-23   Gisle Aas <gisle@ActiveState.com>
