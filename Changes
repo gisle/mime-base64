@@ -7,7 +7,7 @@
       - Long lines were not broken unless they're at the beginning
         of the text
 
-      - Lines near but not over 76 chars are broken when they
+      - Lines near but not over 76 chars were broken when they
         shouldn't be
 
 
@@ -25,3 +25,4 @@
 1997-04-24   Gisle Aas <aas@sn.no>
 
    Release 2.00, based on libwww-perl-5.08.
+
