@@ -5,7 +5,7 @@ use blib;
 use MIME::QuotedPrint;
 use Time::HiRes qw(time);
 
-my $file = shift || die "Usage: $0 <file> <old>\n";
+my $file = shift || die "Usage: $0 <file> <old> <slurp>\n";
 
 if (shift) {
     *enc = \&MIME::QuotedPrint::old_encode_qp;
@@ -26,6 +26,8 @@ die if -e $tmp;
 my $rounds = 100;
 
 my $before = time;
+
+undef($/) if shift;
 
 for (1 .. $rounds) {
     open(FILE, $file) || die;
