@@ -114,7 +114,7 @@ of 4 base64 chars:
 
 =head1 COPYRIGHT
 
-Copyright 1995-1999, 2001 Gisle Aas.
+Copyright 1995-1999, 2001-2003 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -26,7 +26,7 @@ you don't have a working C compiler installed).  Simply remove the Base64.xs
 file before running 'perl Makefile.PL' and everything should work the same,
 although encoding and decoding will be much slower.
 
-Copyright 1995-1999,2001 Gisle Aas <gisle@ActiveState.com>
+Copyright 1995-1999,2001-2003 Gisle Aas <gisle@ActiveState.com>
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
