@@ -1,3 +1,12 @@
+1998-01-27   Gisle Aas <aas@sn.no>
+
+   Release 2.05
+   
+   The encode_base64() and decode_base64() now allocate one byte less
+   space in the result strings returned.  No big deal!
+
+
+
 1997-12-02   Gisle Aas <aas@sn.no>
 
    Release 2.04
