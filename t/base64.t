@@ -298,11 +298,13 @@ sub encodeTest
 
 	my $encoded = encode_base64($plain, '');
 	if ($encoded ne $expected) {
-	    die "test $testno ($plain): expected $expected, got $encoded\n";
+	    print "test $testno ($plain): expected $expected, got $encoded\n";
+            print "not ";
 	}
 	my $decoded = decode_base64($encoded);
 	if ($decoded ne $plain) {
-	    die "test $testno ($plain): expected $expected, got $encoded\n";
+	    print "test $testno ($plain): expected $expected, got $encoded\n";
+            print "not ";
 	}
 
 	print "ok $testno\n";
