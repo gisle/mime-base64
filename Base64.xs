@@ -180,7 +180,8 @@ decode_base64(sv)
 
 		if (str == end) {
 		    if (i < 4) {
-			if (PL_dowarn) warn("Premature end of base64 data");
+			if (i && PL_dowarn)
+			    warn("Premature end of base64 data");
 			if (i < 2) goto thats_it;
 			if (i == 2) c[2] = EQ;
 			c[3] = EQ;
