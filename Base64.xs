@@ -300,16 +300,16 @@ encode_qp(sv,...)
 			sv_catpvn(RETVAL, p_beg, len);
 			p_beg += len;
 			p_len -= len;
-			if (p_len > 1) {
-			    sv_catpvn(RETVAL, "=", 1);
-			    sv_catpvn(RETVAL, eol, eol_len);
-		            linelen = 0;
-			}
+			if (p_len <= 1)
+			    break;
+			sv_catpvn(RETVAL, "=", 1);
+			sv_catpvn(RETVAL, eol, eol_len);
+		        linelen = 0;
 		    }
                 }
 		if (p_len) {
 	            sv_catpvn(RETVAL, p_beg, p_len);
-	            linelen = p_len;
+	            linelen += p_len;
 		}
 	    }
 
