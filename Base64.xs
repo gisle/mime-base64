@@ -147,13 +147,11 @@ decode_base64(sv)
 	PREINIT:
 	unsigned char *str;
 	int len;
-	char *strend;
 	char *r;
 	int c1, c2, c3, c4;
 
 	CODE:
-	str = SvPV(sv, len);
-	strend = str + len;
+	str = (unsigned char*)SvPV(sv, len);
 
 	RETVAL = newSV(len/4*3 + 1);  /* enough, but might waste some space */
 	SvPOK_on(RETVAL);
