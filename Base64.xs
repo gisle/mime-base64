@@ -109,7 +109,7 @@ encode_base64(sv,...)
 	int chunk;
 
 	CODE:
-#ifdef sv_utf8_downgrade
+#if PERL_REVISION == 5 && PERL_VERSION >= 6
 	sv_utf8_downgrade(sv, FALSE);
 #endif
 	str = SvPV(sv, rlen); /* SvPV(sv, len) gives warning for signed len */
