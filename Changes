@@ -9,6 +9,8 @@
    Change in behaviour: the decode_qp() function now turns \r\n
    terminated lines into \n terminated lines.
 
+   Included {en,de}code-{base64,qp} scripts.
+
 
 
 2002-02-27   Gisle Aas <gisle@ActiveState.com>
