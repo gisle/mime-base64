@@ -13,12 +13,6 @@ the ASCII character set.  Non-printable characters are represented by
 a triplet consisting of the character "=" followed by two hexadecimal
 digits.
 
-The MIME::Base64 and MIME::QuotedPrint modules used to be part of
-libwww-perl package.  They are now distributed separately (as this
-package).  The main improvement is that the base64 encoder/decoder is
-implemented by XS functions.  This makes it about 20 times faster than
-the old implementation as pure Perl.
-
 In order to install and use this package you will need Perl version
 5.002 or better.  Installation as usual:
 
