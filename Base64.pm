@@ -161,6 +161,16 @@ use integer;
 
 sub old_encode_base64 ($;$)
 {
+    if ($] >= 5.006) {
+	require bytes;
+	if (bytes::length($_[0]) > length($_[0]) ||
+	    ($] >= 5.008 && $_[0] =~ /[^\0-\xFF]/))
+	{
+	    require Carp;
+	    Carp::croak("The Base64 encoding is only defined for bytes");
+	}
+    }
+
     my $eol = $_[1];
     $eol = "\n" unless defined $eol;
 

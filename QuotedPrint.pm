@@ -97,8 +97,6 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(encode_qp decode_qp);
 
-use Carp qw(croak);
-
 $VERSION = "2.21";
 
 use MIME::Base64;  # try to load XS version of encode_qp
@@ -113,13 +111,15 @@ sub old_encode_qp ($;$)
     if ($] >= 5.006) {
 	require bytes;
 	if (bytes::length($res) > length($res) ||
-	    ($] >= 5.008 && $res =~ /[^\0-\xFF]/)) {
-	    croak("The Quoted-Printable encoding is only defined for bytes");
+	    ($] >= 5.008 && $res =~ /[^\0-\xFF]/))
+	{
+	    require Carp;
+	    Carp::croak("The Quoted-Printable encoding is only defined for bytes");
 	}
     }
 
     my $eol = shift;
-    $eol = "\n" unless defined($eol) || length($eol);
+    $eol = "\n" unless defined $eol;
 
     # Do not mention ranges such as $res =~ s/([^ \t\n!-<>-~])/sprintf("=%02X", ord($1))/eg;
     # since that will not even compile on an EBCDIC machine (where ord('!') > ord('<')).
@@ -148,11 +148,14 @@ sub old_encode_qp ($;$)
     }
     else { # ASCII style machine
         $res =~  s/([^ \t\n!"#\$%&'()*+,\-.\/0-9:;<>?\@A-Z[\\\]^_`a-z{|}~])/sprintf("=%02X", ord($1))/eg;  # rule #2,#3
+	$res =~ s/\n/=0A/g unless length($eol);
         $res =~ s/([ \t]+)$/
           join('', map { sprintf("=%02X", ord($_)) }
     		   split('', $1)
           )/egm;                        # rule #3 (encode whitespace at eol)
     }
+
+    return $res unless length($eol);
 
     # rule #5 (lines must be shorter than 76 chars, but we are not allowed
     # to break =XX escapes.  This makes things complicated :-( )
@@ -163,6 +166,7 @@ sub old_encode_qp ($;$)
 		|[^=\n]    (?! [^=\n]{0,2} $) # 74 not followed by .?.?\n
 		|          (?! [^=\n]{0,3} $) # 73 not followed by .?.?.?\n
 	    ))//xsm;
+    $res =~ s/\n\z/$eol/;
 
     "$brokenlines$res";
 }

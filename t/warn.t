@@ -21,6 +21,11 @@ BEGIN {
 use strict;
 use MIME::Base64 qw(decode_base64);
 
+if ($MIME::Base64::OLD_CODE) {
+    print "1..0 # skipped: only XS version generates warnings\n";
+    exit;
+}
+
 print "1..1\n";
 
 use warnings;
