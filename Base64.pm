@@ -10,7 +10,7 @@ require DynaLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
-$VERSION = '3.01';
+$VERSION = '3.02';
 
 MIME::Base64->bootstrap($VERSION);
 
