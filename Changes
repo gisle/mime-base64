@@ -5,6 +5,8 @@
    decode_qp() did eat up all trailing whitespace in the string decoded.
    Only whitespace in front of "\n" should go.
 
+   Win32 fix for t/warn.t by Reini Urban <rurban@x-ray.at>.
+
 
 
 2003-03-09   Gisle Aas <gisle@ActiveState.com>
