@@ -1,3 +1,13 @@
+1998-10-21   Gisle Aas <aas@sn.no>
+
+   Release 2.07
+
+   Faster and smarter C implementation of the decode_base64()
+   function.  The new decode_base64() was 25% faster when tested
+   on Linux, i586, gcc -O2.
+
+
+
 1998-07-15   Gisle Aas <aas@sn.no>
 
    Release 2.06
