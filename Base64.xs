@@ -367,7 +367,7 @@ encode_qp(sv,...)
 	    }
         }
 
-	if (binary && SvCUR(RETVAL) && eol_len && linelen) {
+	if (SvCUR(RETVAL) && eol_len && linelen) {
 	    sv_catpvn(RETVAL, "=", 1);
 	    sv_catpvn(RETVAL, eol, eol_len);
 	}
