@@ -263,11 +263,12 @@ MODULE = MIME::Base64		PACKAGE = MIME::QuotedPrint
 SV*
 encode_qp(sv,...)
 	SV* sv
-	PROTOTYPE: $;$
+	PROTOTYPE: $;$$
 
 	PREINIT:
 	char *eol;
 	STRLEN eol_len;
+	int binary;
 	STRLEN sv_len;
 	STRLEN linelen;
 	char *beg;
@@ -287,6 +288,8 @@ encode_qp(sv,...)
 	    eol = "\n";
 	    eol_len = 1;
 	}
+
+	binary = (items > 2 && SvTRUE(ST(2)));
 
 	beg = SvPV(sv, sv_len);
 	end = beg + sv_len;
@@ -339,7 +342,7 @@ encode_qp(sv,...)
 	    if (p == end) {
 		break;
             }
-	    else if (*p == '\n' && eol_len) {
+	    else if (*p == '\n' && eol_len && !binary) {
 	        sv_catpvn(RETVAL, eol, eol_len);
 	        p++;
 		linelen = 0;
@@ -363,6 +366,11 @@ encode_qp(sv,...)
      		SvGROW(RETVAL, expected_len);
 	    }
         }
+
+	if (binary && SvCUR(RETVAL) && eol_len && linelen) {
+	    sv_catpvn(RETVAL, "=", 1);
+	    sv_catpvn(RETVAL, eol, eol_len);
+	}
 
 	OUTPUT:
 	RETVAL

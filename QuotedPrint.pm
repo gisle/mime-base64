@@ -50,6 +50,8 @@ The following functions are provided:
 
 =item encode_qp($str, $eol)
 
+=item encode_qp($str, $eol, $binmode)
+
 This function returns an encoded version of the string given as
 argument.
 
@@ -61,8 +63,16 @@ characters.  You might want to pass it as "\015\012" to produce data
 suitable for external consumption.  The string "\r\n" produces the
 same result on many platforms, but not all.
 
-An $eol of "" (the empty string) is special.  In this case, no "soft line breaks" are introduced
-and any literal "\n" in the original data is encoded as well.
+An $eol of "" (the empty string) is special.  In this case, no "soft
+line breaks" are introduced and any "\n" in the original data is
+encoded as well.
+
+The third argument will select binary mode if passed as a TRUE value.
+In binary mode "\n" will be encoded in the same way as any other
+non-printable character.  This ensures that a decoder will end up with
+exactly the same string whatever line ending sequence it uses.  In
+general it is preferable to use the base64 encoding of binary data;
+see L<MIME::Base64>.
 
 =item decode_qp($str);
 
