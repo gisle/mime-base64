@@ -292,17 +292,19 @@ encode_qp(sv,...)
 	    p_len = p - beg;
 	    if (p_len) {
 	        /* output plain text (with line breaks) */
-	        while (p_len + linelen > 75) {
-		    STRLEN len = 75 - linelen;
-		    sv_catpvn(RETVAL, beg, len);
-	            beg += len;
-		    p_len -= len;
-		    if (p_len > 1) {
-			sv_catpvn(RETVAL, "=", 1);
-			sv_catpvn(RETVAL, eol, eol_len);
-		        linelen = 0;
+	        if (eol_len) {
+		    while (p_len + linelen > 75) {
+			STRLEN len = 75 - linelen;
+			sv_catpvn(RETVAL, beg, len);
+			beg += len;
+			p_len -= len;
+			if (p_len > 1) {
+			    sv_catpvn(RETVAL, "=", 1);
+			    sv_catpvn(RETVAL, eol, eol_len);
+		            linelen = 0;
+			}
 		    }
-		}
+                }
 		if (p_len) {
 	            sv_catpvn(RETVAL, beg, p_len);
 	            linelen = p_len;
@@ -316,7 +318,7 @@ encode_qp(sv,...)
 	    }
 	    else if (p < end) {
 		/* output escaped char (with line breaks) */
-		if (linelen > 72) {
+		if (eol_len && linelen > 72) {
 		    sv_catpvn(RETVAL, "=", 1);
 		    sv_catpvn(RETVAL, eol, eol_len);
 		    linelen = 0;
