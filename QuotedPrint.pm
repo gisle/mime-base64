@@ -34,13 +34,13 @@ The following functions are provided:
 =item encode_qp($str, $eol)
 
 This function will return an encoded version of the string given as
-argument.  The second argument is the line ending sequence to use (it
-is optional and defaults to C<"\n">).
+argument.  The second argument is the line ending sequence to use.  It
+is optional and defaults to "\n".
 
 =item decode_qp($str);
 
 This function will return the plain text version of the string given
-as argument.  Lines with be "\n" terminated.
+as argument.  Lines will be "\n" terminated.
 
 =back
 
