@@ -73,6 +73,7 @@ sub encode_base64 ($;$)
     my $res = "";
     my $eol = $_[1];
     $eol = "\n" unless defined $eol;
+    pos($_[0]) = 0;                          # ensure start at the beginning
     while ($_[0] =~ /(.{1,45})/gs) {
 	$res .= substr(pack('u', $1), 1);
 	chop($res);
