@@ -318,7 +318,7 @@ encode_qp(sv,...)
 		}
 	    }
 
-	    if (*p == '\n') {
+	    if (*p == '\n' && eol_len) {
 	        sv_catpvn(RETVAL, eol, eol_len);
 	        p++;
 		linelen = 0;

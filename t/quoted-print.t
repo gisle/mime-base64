@@ -87,7 +87,7 @@ y. -- H. L. Mencken"],
    ["$x70!2345$x70!2345$x70!23456\n", "$x70!2345=\n$x70!2345=\n$x70!23456\n"],
 );
 
-$notests = @tests + 3;
+$notests = @tests + 5;
 print "1..$notests\n";
 
 $testno = 0;
@@ -125,6 +125,14 @@ $testno++; print "ok $testno\n";
 # Same test but with "\r\n" terminated lines
 print "not " unless decode_qp("foo  \r\n\r\nfoo =\r\n\r\nfoo=20\r\n\r\n") eq
                                 "foo\n\nfoo \nfoo \n\n";
+$testno++; print "ok $testno\n";
+
+# Test with with alternative line break
+print "not " unless encode_qp("$x70!2345$x70\n", "***") eq "$x70!2345=***$x70***";
+$testno++; print "ok $testno\n";
+
+# Test with no line breaks
+print "not " unless encode_qp("$x70!2345$x70\n", "") eq "$x70!2345$x70=0A";
 $testno++; print "ok $testno\n";
 
 print "not " if $] >= 5.006 && (eval 'encode_qp("XXX \x{100}")' || !$@);
