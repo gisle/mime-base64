@@ -1,3 +1,13 @@
+2003-01-05   Gisle Aas <gisle@ActiveState.com>
+
+   Release 2.16
+
+   Fixed the encode_qp() line breaking code.  It sometimes
+   made lines longer than 76 chars and it could even get into
+   an infinite loop on certain inputs.
+
+
+
 2003-01-03   Gisle Aas <gisle@ActiveState.com>
 
    Release 2.15
