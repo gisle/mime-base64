@@ -2,7 +2,12 @@
 
    Release 2.13
 
-   Sync up with bleadperl.
+   Sync up with bleadperl:
+       - Documentation update
+       - EBCDIC support
+       - Whitespace tweaks
+       - Improved Unicode support
+       - Test suite tweaks
 
    Improved version of the old_{en,de}code_base64 functions
    contributed by Paul Szabo <psz@maths.usyd.edu.au>.
