@@ -1,8 +1,10 @@
-1998-10-21   Gisle Aas <aas@sn.no>
+1998-10-22   Gisle Aas <aas@sn.no>
 
    Release 2.08
 
    Found another tweak to speed up decode_base64() with another 3%.
+
+   Improved MIME::Base64 documentation a little.
 
 
 
