@@ -98,7 +98,7 @@ require DynaLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(encode_base64 decode_base64);
 
-$VERSION = '2.05';
+$VERSION = '2.06';
 
 eval { bootstrap MIME::Base64 $VERSION; };
 if ($@) {
@@ -148,7 +148,7 @@ sub old_decode_base64 ($)
     $str =~ tr|A-Za-z0-9+=/||cd;            # remove non-base64 chars
     if (length($str) % 4) {
 	require Carp;
-	Carp::croak("Base64 decoder requires string length to be a multiple of 4")
+	Carp::carp("Length of base64 data not a multiple of 4")
     }
     $str =~ s/=+$//;                        # remove padding
     $str =~ tr|A-Za-z0-9+/| -_|;            # convert to uuencoded format
