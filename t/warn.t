@@ -21,11 +21,6 @@ BEGIN {
 use strict;
 use MIME::Base64 qw(decode_base64);
 
-if ($MIME::Base64::OLD_CODE) {
-    print "1..0 # skipped: only XS version generates warnings\n";
-    exit;
-}
-
 print "1..1\n";
 
 use warnings;
@@ -68,12 +63,12 @@ for (@warn) {
 }
 
 print "not " unless join("", @warn) eq <<'EOT'; print "ok 1\n";
-Warning: something's wrong at t/warn.t line 36.
+Warning: something's wrong at t/warn.t line 31.
+Premature end of base64 data at t/warn.t line 33.
+Premature padding of base64 data at t/warn.t line 34.
+Warning: something's wrong at t/warn.t line 35.
 Premature end of base64 data at t/warn.t line 38.
-Premature padding of base64 data at t/warn.t line 39.
-Warning: something's wrong at t/warn.t line 40.
-Premature end of base64 data at t/warn.t line 43.
-Premature padding of base64 data at t/warn.t line 47.
-Warning: something's wrong at t/warn.t line 49.
-Warning: something's wrong at t/warn.t line 58.
+Premature padding of base64 data at t/warn.t line 42.
+Warning: something's wrong at t/warn.t line 44.
+Warning: something's wrong at t/warn.t line 53.
 EOT

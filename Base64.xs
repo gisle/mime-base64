@@ -100,6 +100,10 @@ static unsigned char index_64[256] = {
 #   define SvPVbyte SvPV
 #endif
 
+#ifndef isXDIGIT
+#   define isXDIGIT isxdigit
+#endif
+
 #ifndef NATIVE_TO_ASCII
 #   define NATIVE_TO_ASCII(ch) (ch)
 #endif
