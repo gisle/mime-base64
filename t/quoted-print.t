@@ -25,8 +25,8 @@ $x70 = "x" x 70;
    ["test  \ntest\n\t \t \n" => "test=20=20\ntest\n=09=20=09=20\n"],
 
    # "=" is special an should be decoded
-   ["=\n" => "=3D\n"],
-   ["\0\xff" => "=00=FF"],
+   ["=30\n" => "=3D30\n"],
+   ["\0\xff0" => "=00=FF0"],
 
    # Very long lines should be broken (not more than 76 chars
    ["The Quoted-Printable encoding is intended to represent data that largly consists of octets that correspond to printable characters in the ASCII character set." =>

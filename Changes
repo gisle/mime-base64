@@ -1,3 +1,10 @@
+2003-01-03   Gisle Aas <gisle@ActiveState.com>
+
+   Release 2.15
+
+   Fixed the XS based decode_qp() for strings where a =XX
+   sequence was followed by digits.
+
 2003-01-01   Gisle Aas <gisle@ActiveState.com>
 
    Release 2.14

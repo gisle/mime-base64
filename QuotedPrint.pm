@@ -73,7 +73,7 @@ require Exporter;
 
 use Carp qw(croak);
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = "2.15";
 
 use MIME::Base64;  # try to load XS version of encode_qp
 unless (defined &encode_qp) {

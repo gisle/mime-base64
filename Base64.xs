@@ -381,8 +381,12 @@ decode_qp(sv)
 		    whitespace = 0;
                 }
             	if (*str == '=' && (str + 2) < end && isxdigit(str[1]) && isxdigit(str[2])) {
-		    *r++ = (char)strtol(str + 1, 0, 16);
-		    str += 3;
+	            char buf[3];
+                    str++;
+	            buf[0] = *str++;
+		    buf[1] = *str++;
+	            buf[2] = '\0';
+		    *r++ = (char)strtol(buf, 0, 16);
 	        }
 		else if (*str == '=' && (str + 1) < end && str[1] == '\n') {
 		    str += 2;
