@@ -46,7 +46,7 @@ sub Version { $VERSION; }
 
 sub encode_qp
 {
-    $res = shift;
+    my $res = shift;
     $res =~ s/([^ \t\n!-<>-~])/sprintf("=%02X", ord($1))/eg;  # rule #2,#3
     $res =~ s/([ \t]+)$/
       join('', map { sprintf("=%02X", ord($_)) }
@@ -66,7 +66,7 @@ sub encode_qp
 
 sub decode_qp
 {
-    $res = shift;
+    my $res = shift;
     $res =~ s/\s+(\r?\n)/$1/g; # rule #3 (trailing white space must be deleted)
     $res =~ s/=\r?\n//g;       # rule #5 (soft line breaks)
     $res =~ s/=([\da-fA-F]{2})/pack("C", hex($1))/ge;
