@@ -399,7 +399,7 @@ decode_qp(sv)
 		    whitespace = 0;
                 }
             	if (*str == '=') {
-		    if ((str + 2) < end && isxdigit(str[1]) && isxdigit(str[2])) {
+		    if ((str + 2) < end && isXDIGIT(str[1]) && isXDIGIT(str[2])) {
 	                char buf[3];
                         str++;
 	                buf[0] = *str++;
