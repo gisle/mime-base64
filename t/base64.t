@@ -1,6 +1,6 @@
 use MIME::Base64;
 
-print "1..281\n";
+print "1..282\n";
 
 print "Testing MIME::Base64-", $MIME::Base64::VERSION, "\n";
 
@@ -9,6 +9,9 @@ $testno = 1;
 encodeTest();
 decodeTest();
 
+# This used to generate a warning
+print "not " unless decode_base64(encode_base64("foo")) eq "foo";
+print "ok ", $testno++, "\n";
 
 sub encodeTest
 {
