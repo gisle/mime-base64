@@ -70,7 +70,7 @@ encode_base64(sv,...)
 
 	PREINIT:
 	char *str;     /* string to encode */
-	STRLEN len;    /* length of the string */
+	SSize_t len;   /* length of the string */
         char *eol;     /* the end-of-line sequence to use */
         STRLEN eollen; /* length of the EOL sequence */
 	char *r;       /* result string */
@@ -79,7 +79,8 @@ encode_base64(sv,...)
 	int chunk;
 
 	CODE:
-	str = SvPV(sv, len);
+	str = SvPV(sv, rlen); /* SvPV(sv, len) gives warning for signed len */
+	len = (SSize_t)rlen;
 
 	/* set up EOL from the second argument if present, default to "\n" */
 	if (items > 1 && SvOK(ST(1))) {
