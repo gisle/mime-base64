@@ -31,11 +31,15 @@ extern "C" {
 }
 #endif
 
+#define MAX_LINE  76 /* size of encoded lines */
+
 static char basis_64[] =
    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-#define XX 255	/* illegal base64 char */
-#define EQ 254	/* padding */
+#define XX      255	/* illegal base64 char */
+#define EQ      254	/* padding */
+#define INVALID XX
+
 static unsigned char index_64[256] = {
     XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
     XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
@@ -56,9 +60,6 @@ static unsigned char index_64[256] = {
     XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
 };
 
-#define MAX_LINE       76
-#define GETC(str,len)  (len > 0 ? len--,*str++ : EOF)
-#define INVALID_B64(c) (index_64[(unsigned char)c] == XX)
 
 
 MODULE = MIME::Base64		PACKAGE = MIME::Base64
@@ -146,62 +147,59 @@ decode_base64(sv)
 	PROTOTYPE: $
 
 	PREINIT:
-	unsigned char *str;
 	STRLEN len;
-	STRLEN rlen;
+	register unsigned char *str = SvPV(sv, len);
+	unsigned char const* end = str + len;
 	char *r;
-	int c1, c2, c3, c4;
+	int i;
+	unsigned char c[4];
 
 	CODE:
-	str = (unsigned char*)SvPV(sv, len);
+	{
+	    /* always enough, but might be too much */
+	    STRLEN rlen = len * 3 / 4;
+	    RETVAL = newSV(rlen ? rlen : 1);
+	}
+        SvPOK_on(RETVAL);
+        r = SvPVX(RETVAL);
 
-        rlen = len * 3 / 4;
-	RETVAL = newSV(rlen ? rlen : 1);
-	SvPOK_on(RETVAL);
-	r = SvPVX(RETVAL);
+	while (str < end) {
+	    i = 0;
+            do {
+		unsigned char uc = index_64[*str];
+		if (uc != INVALID)
+		    c[i++] = uc;
+		str++;
 
-	while ((c1 = GETC(str, len)) != EOF) {
-	    if (INVALID_B64(c1))
-		continue;
-	    do {
-		c2 = GETC(str, len);
-	    } while (c2 != EOF && INVALID_B64(c2));
-	    do {
-		c3 = GETC(str, len);
-	    } while (c3 != EOF && INVALID_B64(c3));
-	    do {
-		c4 = GETC(str, len);
-	    } while (c4 != EOF && INVALID_B64(c4));
-
-	    if (c2 == EOF || c3 == EOF || c4 == EOF) {
-		if (dowarn) warn("Premature end of base64 data");
-	        if (c2 == EOF) break;
-		if (c3 == EOF) c3 = '=';
-		c4 = '=';
-	    } else if (c1 == '=' || c2 == '=') {
+		if (str == end) {
+		    if (i < 4) {
+			if (dowarn) warn("Premature end of base64 data");
+			if (i < 2) goto thats_it;
+			if (i == 2) c[2] = EQ;
+			c[3] = EQ;
+		    }
+		    break;
+		}
+            } while (i < 4);
+	    
+	    if (c[0] == EQ || c[1] == EQ) {
 		if (dowarn) warn("Premature padding of base64 data");
 		break;
             }
+	    /* printf("c0=%d,c1=%d,c2=%d,c3=%d\n", c[0],c[1],c[2],c[3]);/**/
 
-	    /* printf("C1=%d,C2=%d,C3=%d,C4=%d\n", c1, c2, c3, c4); */
+	    *r++ = (c[0] << 2) | ((c[1] & 0x30) >> 4);
 
-	    c1 = index_64[c1];
-	    c2 = index_64[c2];
-	    *r++ = (c1<<2) | ((c2&0x30)>>4);
-
-	    if (c3 == '=') {
+	    if (c[2] == EQ)
 		break;
-	    } else {
-		c3 = index_64[c3];
-		*r++ = ((c2&0XF) << 4) | ((c3&0x3C) >> 2);
-	    }
-	    if (c4 == '=') {
+	    *r++ = ((c[1] & 0x0F) << 4) | ((c[2] & 0x3C) >> 2);
+
+	    if (c[3] == EQ)
 		break;
-	    } else {
-		c4 = index_64[c4];
-		*r++ = ((c3&0x03) <<6) | c4;
-	    }
+	    *r++ = ((c[2] & 0x03) << 6) | c[3];
 	}
+
+      thats_it:
 	SvCUR_set(RETVAL, r - SvPVX(RETVAL));
 	*r = '\0';
 
