@@ -1,0 +1,21 @@
+This package contains a Base64 encoder/decoder implemented as an XS
+function.  The module is compatible with the module distributed
+together with libwww-perl.
+
+The Base64 encoding is specified in RFC 2045 - I<MIME (Multipurpose
+Internet Mail Extensions)>. The Base64 encoding is designed to
+represent arbitrary sequences of octets in a form that need not be
+humanly readable. A 65-character subset ([A-Za-z0-9+/=]) of US-ASCII
+is used, enabling 6 bits to be represented per printable character.
+
+Installation:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+Copyright 1995-1997 Gisle Aas.
+
+This library is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
