@@ -34,9 +34,9 @@ ok(encode_base64($a), "YQ==\n");
 SvCUR_set($a, 4);
 ok(encode_base64($a), "YWJjAA==\n");
 
-ok(encode_qp($a), "abc=00");
+ok(encode_qp($a), "abc=00=\n");
 
 $a = "ab\n";
 
 SvCUR_set($a, 2);
-ok(encode_qp($a), "ab");
+ok(encode_qp($a), "ab=\n");
