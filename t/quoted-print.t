@@ -30,6 +30,33 @@ sists of octets that correspond to printable characters in the ASCII charac=
 ter set."
     ],
 
+   # Long lines after short lines were broken through 2.01.
+   ["short line
+In America, any boy may become president and I suppose that's just one of the risks he takes. -- Adlai Stevenson" =>
+    "short line
+In America, any boy may become president and I suppose that's just one of t=
+he risks he takes. -- Adlai Stevenson"],
+
+   # My (roderick@argon.org) first crack at fixing that bug failed for
+   # multiple long lines.
+   ["College football is a game which would be much more interesting if the faculty played instead of the students, and even more interesting if the
+trustees played.  There would be a great increase in broken arms, legs, and necks, and simultaneously an appreciable diminution in the loss to humanity. -- H. L. Mencken" =>
+    "College football is a game which would be much more interesting if the facu=
+lty played instead of the students, and even more interesting if the
+trustees played.  There would be a great increase in broken arms, legs, and=
+ necks, and simultaneously an appreciable diminution in the loss to humanit=
+y. -- H. L. Mencken"],
+
+   # Don't break a line that's near but not over 76 chars.
+   ["$x70!23"		=> "$x70!23"],
+   ["$x70!234"		=> "$x70!234"],
+   ["$x70!2345"		=> "$x70!2345"],
+   ["$x70!23456"	=> "$x70!23456"],
+   ["$x70!23\n"		=> "$x70!23\n"],
+   ["$x70!234\n"	=> "$x70!234\n"],
+   ["$x70!2345\n"	=> "$x70!2345\n"],
+   ["$x70!23456\n"	=> "$x70!23456\n"],
+
    # Not allowed to break =XX escapes using soft line break
    ["$x70===xxxx" => "$x70=3D=\n=3D=3Dxxxx"],
    ["$x70!===xxx" => "$x70!=3D=\n=3D=3Dxxx"],

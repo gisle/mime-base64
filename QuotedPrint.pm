@@ -69,9 +69,12 @@ sub encode_qp ($)
     # rule #5 (lines must be shorter than 76 chars, but we are not allowed
     # to break =XX escapes.  This makes things complicated :-( )
     my $brokenlines = "";
-    $brokenlines .= "$1=\n" while $res =~ s/^(.{73}[^=]{0,2})//;
-    # unnessesary to make a break at the last char
-    $brokenlines =~ s/=\n$// unless length $res;
+    $brokenlines .= "$1=\n"
+	while $res =~ s/(.*?^[^\n]{73} (?:
+		 [^=\n]{2} (?! [^=\n]{0,1} $) # 75 not followed by .?\n
+		|[^=\n]    (?! [^=\n]{0,2} $) # 74 not followed by .?.?\n
+		|          (?! [^=\n]{0,3} $) # 73 not followed by .?.?.?\n
+	    ))//xsm;
 
     "$brokenlines$res";
 }
