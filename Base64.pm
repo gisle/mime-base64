@@ -6,13 +6,13 @@ use strict;
 use vars qw(@ISA @EXPORT $VERSION);
 
 require Exporter;
-require DynaLoader;
-@ISA = qw(Exporter DynaLoader);
+@ISA = qw(Exporter);
 @EXPORT = qw(encode_base64 decode_base64);
 
 $VERSION = '3.05';
 
-MIME::Base64->bootstrap($VERSION);
+require XSLoader;
+XSLoader::load('MIME::Base64', $VERSION);
 
 *encode = \&encode_base64;
 *decode = \&decode_base64;
