@@ -101,6 +101,19 @@ in a base64 quartet.
 
 =back
 
+The following exception can be raised:
+
+=over 4
+
+=item Wide character in subroutine entry
+
+The string passed to encode_base64() contains characters with code
+above 255.  The base64 encoding is only defined for single-byte
+characters.  Use the Encode module to select the byte encoding you
+want.
+
+=back
+
 =head1 EXAMPLES
 
 If you want to encode a large file, you should encode it in chunks
