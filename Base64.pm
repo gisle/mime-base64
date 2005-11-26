@@ -130,6 +130,18 @@ of four base64 chars:
 
    perl -MMIME::Base64 -ne 'print decode_base64($_)' <file
 
+Perl v5.8 and better allow extended Unicode characters in strings.
+Such strings cannot be encoded directly, as the base64
+encoding is only defined for single-byte characters.  The solution is
+to use the Encode module to select the byte encoding you want.  For
+example:
+
+    use MIME::Base64 qw(encode_base64);
+    use Encode qw(encode);
+
+    $encoded = encode_base64(encode("UTF-8", "\x{FFFF}\n"));
+    print $encoded;
+
 =head1 COPYRIGHT
 
 Copyright 1995-1999, 2001-2004 Gisle Aas.
