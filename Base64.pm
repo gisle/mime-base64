@@ -91,8 +91,8 @@ C<-w> switch:
 
 The number of characters to decode is not a multiple of 4.  Legal
 base64 data should be padded with one or two "=" characters to make
-its length a multiple of 4.  The decoded result will anyway be as if
-the padding was there.
+its length a multiple of 4.  The decoded result will be the same
+whether the padding is present or not.
 
 =item Premature padding of base64 data
 
