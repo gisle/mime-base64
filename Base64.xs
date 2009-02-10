@@ -119,7 +119,7 @@ encode_base64(sv,...)
 	PREINIT:
 	char *str;     /* string to encode */
 	SSize_t len;   /* length of the string */
-	char *eol;     /* the end-of-line sequence to use */
+	const char*eol;/* the end-of-line sequence to use */
 	STRLEN eollen; /* length of the EOL sequence */
 	char *r;       /* result string */
 	STRLEN rlen;   /* length of result string */
@@ -157,8 +157,8 @@ encode_base64(sv,...)
 	/* encode */
 	for (chunk=0; len > 0; len -= 3, chunk++) {
 	    if (chunk == (MAX_LINE/4)) {
-		char *c = eol;
-		char *e = eol + eollen;
+		const char *c = eol;
+		const char *e = eol + eollen;
 		while (c < e)
 		    *r++ = *c++;
 		chunk = 0;
@@ -181,8 +181,8 @@ encode_base64(sv,...)
 	}
 	if (rlen) {
 	    /* append eol to the result string */
-	    char *c = eol;
-	    char *e = eol + eollen;
+	    const char *c = eol;
+	    const char *e = eol + eollen;
 	    while (c < e)
 		*r++ = *c++;
 	}
@@ -270,7 +270,7 @@ encode_qp(sv,...)
 	PROTOTYPE: $;$$
 
 	PREINIT:
-	char *eol;
+	const char *eol;
 	STRLEN eol_len;
 	int binary;
 	STRLEN sv_len;
