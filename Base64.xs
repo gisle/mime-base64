@@ -1,4 +1,4 @@
-/* $Id$
+/*
 
 Copyright 1997-2004 Gisle Aas
 
