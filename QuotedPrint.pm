@@ -1,7 +1,5 @@
 package MIME::QuotedPrint;
 
-# $Id$
-
 use strict;
 use vars qw(@ISA @EXPORT $VERSION);
 
@@ -9,7 +7,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(encode_qp decode_qp);
 
-$VERSION = "3.07";
+$VERSION = "3.08";
 
 use MIME::Base64;  # will load XS version of {en,de}code_qp()
 
