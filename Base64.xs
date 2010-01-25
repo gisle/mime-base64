@@ -354,7 +354,7 @@ encode_qp(sv,...)
 	    else {
 		/* output escaped char (with line breaks) */
 	        assert(p < end);
-		if (eol_len && linelen > MAX_LINE - 4) {
+		if (eol_len && linelen > MAX_LINE - 4 && !(linelen == MAX_LINE - 3 && p + 1 < end && p[1] == '\n' && !binary)) {
 		    sv_catpvn(RETVAL, "=", 1);
 		    sv_catpvn(RETVAL, eol, eol_len);
 		    linelen = 0;
