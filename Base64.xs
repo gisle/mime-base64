@@ -255,6 +255,35 @@ decode_base64(sv)
 	OUTPUT:
 	RETVAL
 
+int
+decoded_base64_length(sv)
+	SV* sv
+	PROTOTYPE: $
+
+	PREINIT:
+	STRLEN len;
+	register unsigned char *str = (unsigned char*)SvPVbyte(sv, len);
+	unsigned char const* end = str + len;
+	int i = 0;
+
+	CODE:
+	RETVAL = 0;
+	while (str < end) {
+	    unsigned char uc = index_64[NATIVE_TO_ASCII(*str++)];
+	    if (uc == INVALID)
+		continue;
+	    if (uc == EQ)
+	        break;
+	    if (i++) {
+		RETVAL++;
+		if (i == 4)
+		    i = 0;
+	    }
+	}
+
+	OUTPUT:
+	RETVAL
+
 
 MODULE = MIME::Base64		PACKAGE = MIME::QuotedPrint
 
