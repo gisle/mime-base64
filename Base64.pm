@@ -69,10 +69,18 @@ If the length of the string to decode, after ignoring
 non-base64 chars, is not a multiple of 4 or if padding occurs too early,
 then a warning is generated if perl is running under C<-w>.
 
+=item encoded_base64_length($str)
+
+=item encoded_base64_length($str, $eol)
+
+Returns the length that the encoded string would have without actually
+encoding it.  This will return the same value as C<< length(encode_base64($str)) >>,
+but should be more efficient.
+
 =item decoded_base64_length($str)
 
 Returns the length that the decoded string would have without actually
-decoding it.  This should return the same as value as C<< length(decode_base64($str)) >>,
+decoding it.  This will return the same value as C<< length(decode_base64($str)) >>,
 but should be more efficient.
 
 =back

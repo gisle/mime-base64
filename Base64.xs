@@ -256,6 +256,35 @@ decode_base64(sv)
 	RETVAL
 
 int
+encoded_base64_length(sv,...)
+	SV* sv
+	PROTOTYPE: $;$
+
+	PREINIT:
+	SSize_t len;   /* length of the string */
+	STRLEN eollen; /* length of the EOL sequence */
+
+	CODE:
+#if PERL_REVISION == 5 && PERL_VERSION >= 6
+	sv_utf8_downgrade(sv, FALSE);
+#endif
+	len = SvCUR(sv);
+
+	if (items > 1 && SvOK(ST(1))) {
+	    eollen = SvCUR(ST(1));
+	} else {
+	    eollen = 1;
+	}
+
+	RETVAL = (len+2) / 3 * 4;	 /* encoded bytes */
+	if (RETVAL) {
+	    RETVAL += ((RETVAL-1) / MAX_LINE + 1) * eollen;
+	}
+
+	OUTPUT:
+	RETVAL
+
+int
 decoded_base64_length(sv)
 	SV* sv
 	PROTOTYPE: $
