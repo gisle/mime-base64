@@ -1,11 +1,12 @@
 package MIME::Base64;
 
 use strict;
-use vars qw(@ISA @EXPORT $VERSION);
+use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION);
 
 require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(encode_base64 decode_base64);
+@EXPORT_OK = qw(encoded_base64_length decoded_base64_length);
 
 $VERSION = '3.09';
 
@@ -39,7 +40,7 @@ arbitrary sequences of octets in a form that need not be humanly
 readable. A 65-character subset ([A-Za-z0-9+/=]) of US-ASCII is used,
 enabling 6 bits to be represented per printable character.
 
-The following functions are provided:
+The following primary functions are provided:
 
 =over 4
 
@@ -69,6 +70,19 @@ If the length of the string to decode, after ignoring
 non-base64 chars, is not a multiple of 4 or if padding occurs too early,
 then a warning is generated if perl is running under C<-w>.
 
+=back
+
+If you prefer not to import these routines into your namespace, you can
+call them as:
+
+    use MIME::Base64 ();
+    $encoded = MIME::Base64::encode($decoded);
+    $decoded = MIME::Base64::decode($encoded);
+
+Additional functions not exported by default:
+
+=over 4
+
 =item encoded_base64_length($str)
 
 =item encoded_base64_length($str, $eol)
@@ -84,13 +98,6 @@ decoding it.  This will return the same value as C<< length(decode_base64($str))
 but should be more efficient.
 
 =back
-
-If you prefer not to import these routines into your namespace, you can
-call them as:
-
-    use MIME::Base64 ();
-    $encoded = MIME::Base64::encode($decoded);
-    $decoded = MIME::Base64::decode($encoded);
 
 =head1 DIAGNOSTICS
 

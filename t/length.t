@@ -5,9 +5,9 @@ use Test qw(plan ok);
 
 plan tests => 129;
 
-use MIME::Base64 qw(encode_base64 decode_base64);
-*elen = *MIME::Base64::encoded_base64_length;
-*dlen = *MIME::Base64::decoded_base64_length;
+use MIME::Base64 qw(encode_base64 encoded_base64_length decoded_base64_length);
+*elen = *encoded_base64_length;
+*dlen = *decoded_base64_length;
 
 ok(elen(""), 0);
 ok(elen("a"), 5);
