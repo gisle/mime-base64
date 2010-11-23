@@ -6,7 +6,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION);
 require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(encode_base64 decode_base64);
-@EXPORT_OK = qw(encoded_base64_length decoded_base64_length);
+@EXPORT_OK = qw(encode_base64url decode_base64url encoded_base64_length decoded_base64_length);
 
 $VERSION = '3.10';
 
@@ -15,6 +15,20 @@ XSLoader::load('MIME::Base64', $VERSION);
 
 *encode = \&encode_base64;
 *decode = \&decode_base64;
+
+sub encode_base64url {
+    my $e = encode_base64(shift, "");
+    $e =~ s/=+\z//;
+    $e =~ tr[+/][-_];
+    return $e;
+}
+
+sub decode_base64url {
+    my $s = shift;
+    $s =~ tr[-_][+/];
+    $s .= '=' while length($s) % 4;
+    return decode_base64($s);
+}
 
 1;
 
@@ -82,6 +96,15 @@ call them as:
 Additional functions not exported by default:
 
 =over 4
+
+=item encode_base64url($str)
+
+=item decode_base64url($str)
+
+Encode and decode according to the base64 scheme for "URL applications" [1].
+This is a variant of the base64 encoding which does not use padding, does not
+break the string into multiple lines and use the characters "-" and "_" instead
+of "+" and "/" to avoid using reserved URL characters.
 
 =item encoded_base64_length($str)
 
@@ -192,5 +215,7 @@ Communications Research, Inc. (Bellcore)
 =head1 SEE ALSO
 
 L<MIME::QuotedPrint>
+
+[1] L<http://en.wikipedia.org/wiki/Base64#URL_applications>
 
 =cut
