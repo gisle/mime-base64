@@ -85,10 +85,6 @@ Any character not part of the 65-character base64 subset is
 silently ignored.  Characters occurring after a '=' padding character
 are never decoded.
 
-If the length of the string to decode, after ignoring
-non-base64 chars, is not a multiple of 4 or if padding occurs too early,
-then a warning is generated if perl is running under C<-w>.
-
 =back
 
 If you prefer not to import these routines into your namespace, you can
