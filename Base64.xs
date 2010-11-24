@@ -180,7 +180,7 @@ decode_base64(sv)
 
 	PREINIT:
 	STRLEN len;
-	register unsigned char *str = (unsigned char*)SvPVbyte(sv, len);
+	register unsigned char *str = (unsigned char*)SvPV(sv, len);
 	unsigned char const* end = str + len;
 	char *r;
 	unsigned char c[4];
@@ -270,7 +270,7 @@ decoded_base64_length(sv)
 
 	PREINIT:
 	STRLEN len;
-	register unsigned char *str = (unsigned char*)SvPVbyte(sv, len);
+	register unsigned char *str = (unsigned char*)SvPV(sv, len);
 	unsigned char const* end = str + len;
 	int i = 0;
 
