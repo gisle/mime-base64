@@ -1,0 +1,8 @@
+*.o
+*.tar.gz
+*.old
+/Makefile
+/blib/
+/pm_to_blib
+/Base64.c
+/Base64.bs
