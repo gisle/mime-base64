@@ -166,7 +166,7 @@ example:
 
 =head1 COPYRIGHT
 
-Copyright 1995-1999, 2001-2004 Gisle Aas.
+Copyright 1995-1999, 2001-2004, 2010 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
