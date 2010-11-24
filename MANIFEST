@@ -10,4 +10,3 @@ t/base64.t	Test that it works
 t/length.t
 t/quoted-print.t
 t/unicode.t
-t/warn.t
