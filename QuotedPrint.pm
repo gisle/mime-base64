@@ -44,11 +44,11 @@ The following functions are provided:
 
 =over 4
 
-=item encode_qp($str)
+=item encode_qp( $str)
 
-=item encode_qp($str, $eol)
+=item encode_qp( $str, $eol)
 
-=item encode_qp($str, $eol, $binmode)
+=item encode_qp( $str, $eol, $binmode )
 
 This function returns an encoded version of the string ($str) given as
 argument.
@@ -72,7 +72,7 @@ An $eol of "" (the empty string) is special.  In this case, no "soft
 line breaks" are introduced and binary mode is effectively enabled so
 that any "\n" in the original data is encoded as well.
 
-=item decode_qp($str);
+=item decode_qp( $str )
 
 This function returns the plain text version of the string given
 as argument.  The lines of the result are "\n" terminated, even if
