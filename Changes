@@ -419,7 +419,7 @@
 
    Release 2.01
 
-   Base64.xs: Avoid type convertion warnings with some compilers
+   Base64.xs: Avoid type conversion warnings with some compilers
 
    Minor documentation updates
 
