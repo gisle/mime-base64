@@ -17,7 +17,7 @@ WriteMakefile(
     MIN_PERL_VERSION => 5.006,
     META_MERGE   => {
         resources  => {
-            repository => 'http://github.com/gisle/mime-base64',
+            repository => 'https://github.com/gisle/mime-base64',
         }
     },
 );
