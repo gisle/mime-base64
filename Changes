@@ -1,3 +1,11 @@
+2013-07-02   Gisle Aas <gisle@ActiveState.com>
+
+   Release 3.14
+
+   Install to 'site' instead of 'perl' when perl version is 5.12+
+
+
+
 2010-10-26   Gisle Aas <gisle@ActiveState.com>
 
    Release 3.13
