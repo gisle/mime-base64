@@ -1,4 +1,4 @@
-require 5.006;
+require 5.004;
 use ExtUtils::MakeMaker;
 
 my @makefileopts;
@@ -14,7 +14,10 @@ WriteMakefile(
     ABSTRACT     => 'The RFC 2045 encodings; base64 and quoted-printable',
     AUTHOR       => 'Gisle Aas <gisle@activestate.com>',
     LICENSE      => 'perl',
-    MIN_PERL_VERSION => 5.006,
+    MIN_PERL_VERSION => 5.004,
+    PREREQ_PM    => {
+        'XSLoader' => 0,
+    },
     META_MERGE   => {
         resources  => {
             repository => 'https://github.com/gisle/mime-base64',
