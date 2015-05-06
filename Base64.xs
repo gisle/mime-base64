@@ -34,6 +34,8 @@ metamail, which comes with this message:
 
 static const char basis_64[] =
    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static const char basis_64url[] =
+   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 #define XX      255	/* illegal base64 char */
 #define EQ      254	/* padding */
@@ -85,39 +87,25 @@ static const unsigned char index_64[256] = {
 #   define NATIVE_TO_ASCII(ch) (ch)
 #endif
 
-MODULE = MIME::Base64		PACKAGE = MIME::Base64
-
-SV*
-encode_base64(sv,...)
-	SV* sv
-	PROTOTYPE: $;$
-
-	PREINIT:
+STATIC SV *
+S_encode(pTHX_ SV *sv, const char *basis, const char *eol, STRLEN eollen, int autopad)
+{
 	char *str;     /* string to encode */
 	SSize_t len;   /* length of the string */
-	const char*eol;/* the end-of-line sequence to use */
-	STRLEN eollen; /* length of the EOL sequence */
 	char *r;       /* result string */
 	STRLEN rlen;   /* length of result string */
 	unsigned char c1, c2, c3;
 	int chunk;
+	SV *result;
 	U32 had_utf8;
 
-	CODE:
 #if PERL_REVISION == 5 && PERL_VERSION >= 6
 	had_utf8 = SvUTF8(sv);
 	sv_utf8_downgrade(sv, FALSE);
 #endif
+
 	str = SvPV(sv, rlen); /* SvPV(sv, len) gives warning for signed len */
 	len = (SSize_t)rlen;
-
-	/* set up EOL from the second argument if present, default to "\n" */
-	if (items > 1 && SvOK(ST(1))) {
-	    eol = SvPV(ST(1), eollen);
-	} else {
-	    eol = "\n";
-	    eollen = 1;
-	}
 
 	/* calculate the length of the result */
 	rlen = (len+2) / 3 * 4;	 /* encoded bytes */
@@ -126,38 +114,39 @@ encode_base64(sv,...)
 	    rlen += ((rlen-1) / MAX_LINE + 1) * eollen;
 	}
 
-	/* allocate a result buffer */
-	RETVAL = newSV(rlen ? rlen : 1);
-	SvPOK_on(RETVAL);	
-	SvCUR_set(RETVAL, rlen);
-	r = SvPVX(RETVAL);
+	result = newSV(rlen ? rlen : 1);
+	SvPOK_on(result);
+	r = SvPVX(result);
 
 	/* encode */
 	for (chunk=0; len > 0; len -= 3, chunk++) {
-	    if (chunk == (MAX_LINE/4)) {
-		const char *c = eol;
-		const char *e = eol + eollen;
-		while (c < e)
-		    *r++ = *c++;
-		chunk = 0;
+	    if (chunk == (MAX_LINE/4) && eollen) {
+			const char *c = eol;
+			const char *e = eol + eollen;
+			while (c < e)
+				*r++ = *c++;
+			chunk = 0;
 	    }
 	    c1 = *str++;
 	    c2 = len > 1 ? *str++ : '\0';
-	    *r++ = basis_64[c1>>2];
-	    *r++ = basis_64[((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4)];
+	    *r++ = basis[c1>>2];
+	    *r++ = basis[((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4)];
 	    if (len > 2) {
 		c3 = *str++;
-		*r++ = basis_64[((c2 & 0xF) << 2) | ((c3 & 0xC0) >>6)];
-		*r++ = basis_64[c3 & 0x3F];
+		*r++ = basis[((c2 & 0xF) << 2) | ((c3 & 0xC0) >>6)];
+		*r++ = basis[c3 & 0x3F];
 	    } else if (len == 2) {
-		*r++ = basis_64[(c2 & 0xF) << 2];
-		*r++ = '=';
+		*r++ = basis[(c2 & 0xF) << 2];
+			if (autopad)
+				*r++ = '=';
 	    } else { /* len == 1 */
-		*r++ = '=';
-		*r++ = '=';
+			if (autopad) {
+				*r++ = '=';
+				*r++ = '=';
+			}
 	    }
 	}
-	if (rlen) {
+	if (rlen && eollen) {
 	    /* append eol to the result string */
 	    const char *c = eol;
 	    const char *e = eol + eollen;
@@ -165,10 +154,50 @@ encode_base64(sv,...)
 		*r++ = *c++;
 	}
 	*r = '\0';  /* every SV in perl should be NUL-terminated */
+	SvCUR_set(result, r - SvPVX(result));
+
 #if PERL_REVISION == 5 && PERL_VERSION >= 6
 	if (had_utf8)
 	    sv_utf8_upgrade(sv);
 #endif
+
+	return result;
+}
+
+#define encode(sv, basis, eol, eollen, autopad) S_encode(aTHX_ sv, basis, eol, eollen, autopad)
+
+MODULE = MIME::Base64		PACKAGE = MIME::Base64
+
+SV*
+encode_base64(sv,...)
+	SV* sv
+	PROTOTYPE: $;$
+
+	PREINIT:
+	const char*eol;/* the end-of-line sequence to use */
+	STRLEN eollen; /* length of the EOL sequence */
+
+	CODE:
+	/* set up EOL from the second argument if present, default to "\n" */
+	if (items > 1 && SvOK(ST(1))) {
+	    eol = SvPV(ST(1), eollen);
+	} else {
+	    eol = "\n";
+	    eollen = 1;
+	}
+
+	RETVAL = encode(sv, basis_64, eol, eollen, 1);
+
+	OUTPUT:
+	RETVAL
+
+SV*
+encode_base64url(sv,...)
+	SV* sv
+	PROTOTYPE: $;$
+
+	CODE:
+	RETVAL = encode(sv, basis_64url, NULL, 0, 0);
 
 	OUTPUT:
 	RETVAL
