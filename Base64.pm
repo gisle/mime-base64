@@ -16,13 +16,6 @@ XSLoader::load('MIME::Base64', $VERSION);
 *encode = \&encode_base64;
 *decode = \&decode_base64;
 
-sub decode_base64url {
-    my $s = shift;
-    $s =~ tr[-_][+/];
-    $s .= '=' while length($s) % 4;
-    return decode_base64($s);
-}
-
 1;
 
 __END__

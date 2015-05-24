@@ -61,6 +61,26 @@ static const unsigned char index_64[256] = {
     XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
 };
 
+static const unsigned char index_64url[256] = {
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,62,XX,XX,
+    52,53,54,55, 56,57,58,59, 60,61,XX,XX, XX,EQ,XX,XX,
+    XX, 0, 1, 2,  3, 4, 5, 6,  7, 8, 9,10, 11,12,13,14,
+    15,16,17,18, 19,20,21,22, 23,24,25,XX, XX,XX,XX,63,
+    XX,26,27,28, 29,30,31,32, 33,34,35,36, 37,38,39,40,
+    41,42,43,44, 45,46,47,48, 49,50,51,XX, XX,XX,XX,XX,
+
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+    XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX, XX,XX,XX,XX,
+};
+
 #ifdef SvPVbyte
 #   if PERL_REVISION == 5 && PERL_VERSION < 7
        /* SvPVbyte does not work in perl-5.6.1, borrowed version for 5.7.3 */
@@ -164,7 +184,65 @@ S_encode(pTHX_ SV *sv, const char *basis, const char *eol, STRLEN eollen, int au
 	return result;
 }
 
+STATIC SV *
+S_decode(pTHX_ SV *sv, const unsigned char *index)
+{
+	STRLEN rlen, len;
+	register unsigned char *str = (unsigned char*)SvPV(sv, len);
+	unsigned char const* end = str + len;
+	char *r;
+	unsigned char c[4];
+	SV *result;
+
+	/* always enough, but might be too much */
+	rlen = len * 3 / 4;
+	result = newSV(rlen ? rlen : 1);
+
+	SvPOK_on(result);
+	r = SvPVX(result);
+
+	while (str < end) {
+	    int i = 0;
+            do {
+		unsigned char uc = index[NATIVE_TO_ASCII(*str++)];
+		if (uc != INVALID)
+		    c[i++] = uc;
+
+		if (str == end) {
+		    if (i < 4) {
+			if (i < 2) goto thats_it;
+			if (i == 2) c[2] = EQ;
+			c[3] = EQ;
+		    }
+		    break;
+		}
+            } while (i < 4);
+
+	    if (c[0] == EQ || c[1] == EQ) {
+		break;
+            }
+	    /* printf("c0=%d,c1=%d,c2=%d,c3=%d\n", c[0],c[1],c[2],c[3]);*/
+
+	    *r++ = (c[0] << 2) | ((c[1] & 0x30) >> 4);
+
+	    if (c[2] == EQ)
+		break;
+	    *r++ = ((c[1] & 0x0F) << 4) | ((c[2] & 0x3C) >> 2);
+
+	    if (c[3] == EQ)
+		break;
+	    *r++ = ((c[2] & 0x03) << 6) | c[3];
+	}
+
+thats_it:
+	SvCUR_set(result, r - SvPVX(result));
+	*r = '\0';
+
+	return result;
+}
+
 #define encode(sv, basis, eol, eollen, autopad) S_encode(aTHX_ sv, basis, eol, eollen, autopad)
+#define decode(sv, index) S_decode(aTHX_ sv, index)
 
 MODULE = MIME::Base64		PACKAGE = MIME::Base64
 
@@ -207,58 +285,19 @@ decode_base64(sv)
 	SV* sv
 	PROTOTYPE: $
 
-	PREINIT:
-	STRLEN len;
-	register unsigned char *str = (unsigned char*)SvPV(sv, len);
-	unsigned char const* end = str + len;
-	char *r;
-	unsigned char c[4];
+	CODE:
+	RETVAL = decode(sv, index_64);
+
+	OUTPUT:
+	RETVAL
+
+SV*
+decode_base64url(sv)
+	SV* sv
+	PROTOTYPE: $
 
 	CODE:
-	{
-	    /* always enough, but might be too much */
-	    STRLEN rlen = len * 3 / 4;
-	    RETVAL = newSV(rlen ? rlen : 1);
-	}
-        SvPOK_on(RETVAL);
-        r = SvPVX(RETVAL);
-
-	while (str < end) {
-	    int i = 0;
-            do {
-		unsigned char uc = index_64[NATIVE_TO_ASCII(*str++)];
-		if (uc != INVALID)
-		    c[i++] = uc;
-
-		if (str == end) {
-		    if (i < 4) {
-			if (i < 2) goto thats_it;
-			if (i == 2) c[2] = EQ;
-			c[3] = EQ;
-		    }
-		    break;
-		}
-            } while (i < 4);
-	
-	    if (c[0] == EQ || c[1] == EQ) {
-		break;
-            }
-	    /* printf("c0=%d,c1=%d,c2=%d,c3=%d\n", c[0],c[1],c[2],c[3]);*/
-
-	    *r++ = (c[0] << 2) | ((c[1] & 0x30) >> 4);
-
-	    if (c[2] == EQ)
-		break;
-	    *r++ = ((c[1] & 0x0F) << 4) | ((c[2] & 0x3C) >> 2);
-
-	    if (c[3] == EQ)
-		break;
-	    *r++ = ((c[2] & 0x03) << 6) | c[3];
-	}
-
-      thats_it:
-	SvCUR_set(RETVAL, r - SvPVX(RETVAL));
-	*r = '\0';
+	RETVAL = decode(sv, index_64url);
 
 	OUTPUT:
 	RETVAL
