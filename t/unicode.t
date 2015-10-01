@@ -30,13 +30,14 @@ print "# $@" if $@;
 ok($@);
 
 if (defined &utf8::is_utf8) {
-    my $str = "aaa" . v300;
+    my $orig = chr(97) x 3;
+    my $str = $orig . v300;
     ok(utf8::is_utf8($str));
     chop($str);
     ok(utf8::is_utf8($str));
     ok(MIME::Base64::encode($str, ""), "YWFh");
     ok(utf8::is_utf8($str));
-    ok(MIME::QuotedPrint::encode($str), "aaa=\n");
+    ok(MIME::QuotedPrint::encode($str), "$orig=\n");
     ok(utf8::is_utf8($str));
 
     utf8::downgrade($str);
