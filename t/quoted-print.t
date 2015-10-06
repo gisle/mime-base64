@@ -108,8 +108,8 @@ y. -- H. L. Mencken=\n"],
   (
    # plain ascii should not be encoded
    ["", ""],
-   ["quoted printable"  =>
-    "quoted printable=\n"],
+   ["quoted print\table"  =>
+    "quoted print\table=\n"],
 
    # 8-bit chars should be encoded
    ["v\x47re kj\x9cre norske tegn b\x70r \x47res" =>
