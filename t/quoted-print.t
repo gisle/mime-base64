@@ -5,6 +5,38 @@ BEGIN {
         }
 }
 
+# Use our own is() function to not have any dependencies on other modules;
+# this one is simplified from the one in core perl t/test.pl
+my $testno = 0;
+sub is ($$@) {
+    my ($got, $expected, @mess) = @_;
+
+    $testno++;
+
+    my $pass;
+    if( !defined $got || !defined $expected ) {
+        # undef only matches undef
+        $pass = !defined $got && !defined $expected;
+    }
+    else {
+        $pass = $got eq $expected;
+    }
+
+    print "not " unless $pass;
+    print "ok $testno";
+    print " - ", @mess if @mess;
+    print "\n";
+    if (! $pass) {
+        my @caller = caller(0);
+	print STDERR "# Failed test $testno";
+        print STDERR " - ", @mess if @mess;
+        print STDERR " at $caller[1] line $caller[2]\n";
+	print STDERR "#      got $got\n# expected $expected\n";
+    }
+
+    return $pass;
+}
+
 use MIME::QuotedPrint;
 
 $x70 = "x" x 70;
