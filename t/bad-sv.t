@@ -1,5 +1,8 @@
 #!perl -w
 
+use strict;
+use warnings;
+
 BEGIN {
     eval {
 	require Perl::API;
@@ -11,7 +14,6 @@ BEGIN {
     }
 }
 
-use strict;
 use Test qw(plan ok);
 use Perl::API qw(SvCUR SvCUR_set SvLEN);
 use MIME::Base64 qw(encode_base64 decode_base64);

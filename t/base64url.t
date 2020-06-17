@@ -1,6 +1,7 @@
 #!perl -w
 
 use strict;
+use warnings;
 use Test qw(plan ok);
 
 use MIME::Base64 qw(encode_base64url decode_base64url);
